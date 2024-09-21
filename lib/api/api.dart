@@ -98,11 +98,8 @@ class Api {
           'Authorization': ""
         };
 
-        Common.logView(headers);
-
         final response = await http.post(Uri.parse(Plugin.baseURL),
             headers: headers, body: body);
-        print(response);
 
         if (response.statusCode == HttpStatus.ok) {
           dynamic res = jsonDecode(response.body);

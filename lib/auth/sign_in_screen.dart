@@ -31,6 +31,15 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Auth _auth = Auth();
 
+  bool _isEmail = false;
+  bool _isPassword = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isEmail = true;
+  }
+
   /*@override
   void setState(VoidCallback fn) {
     if (mounted) {
@@ -53,97 +62,124 @@ class _SignInScreenState extends State<SignInScreen> {
           scaffoldBackgroundColor: Colorr.white,
           useMaterial3: true,
         ),
-        home: Scaffold(
-          body: SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(mainAxisSize: MainAxisSize.min, children: [
-                  const VSpace(space: 20),
-                  Image.asset(Assets.imgDatadirrTxt,
-                      width: 100, package: Plugin.package),
-                  const VSpace(space: 20),
-                  Visibility(
-                      visible: Utils.isNullOREmpty(_auth.email),
-                      replacement: _passwordUI(),
-                      child: _emailUI())
-                ]),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FlexWidth(
-                    child: CButton(
-                        text: Strings.next,
-                        loading: _loading,
-                        onTap: () {
-                          _checkValidDetails();
-                        }),
+        home: PopScope(
+          canPop: _isEmail,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) {
+              return;
+            }
+            _back();
+          },
+          child: Scaffold(
+            body: SafeArea(
+                child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        const VSpace(space: 20),
+                        Image.asset(Assets.imgDatadirrTxt,
+                            width: 100, package: Plugin.package),
+                        const VSpace(space: 20),
+                        _emailUI(),
+                        _passwordUI(),
+                      ]),
+                    ),
                   ),
-                )
-              ],
-            ),
-          )),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FlexWidth(
+                      child: CButton(
+                          text: Strings.next,
+                          loading: _loading,
+                          onTap: () {
+                            _checkValidDetails();
+                          }),
+                    ),
+                  )
+                ],
+              ),
+            )),
+          ),
         ),
       ),
     );
   }
 
   _emailUI() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(Strings.signIn,
-            style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-        const VSpace(),
-        Text(Strings.signInMsg,
-            style: Styles.txtRegular(color: Colorr.primaryBlue)),
-        const VSpace(space: 30),
-        CATextField(
-          controller: _conEmail,
-          hintText: Strings.email,
-        ),
-        const VSpace(space: 50),
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Tap(
-                onTap: () {},
-                child: Text(Strings.createAccount,
-                    style: Styles.txtMedium(color: Colorr.primaryBlue))))
-      ],
+    return Visibility(
+      visible: _isEmail,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(Strings.signIn,
+              style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
+          const VSpace(),
+          Text(Strings.signInMsg,
+              style: Styles.txtRegular(color: Colorr.primaryBlue)),
+          const VSpace(space: 30),
+          CATextField(
+            controller: _conEmail,
+            hintText: Strings.email,
+          ),
+          const VSpace(space: 50),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Tap(
+                  onTap: () {},
+                  child: Text(Strings.createAccount,
+                      style: Styles.txtMedium(color: Colorr.primaryBlue))))
+        ],
+      ),
     );
   }
 
   _passwordUI() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(Strings.signIn,
-            style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-        const VSpace(),
-        Text(Strings.signInMsg,
-            style: Styles.txtRegular(color: Colorr.primaryBlue)),
-        const VSpace(space: 30),
-        CATextField(
-          controller: _conPassword,
-          hintText: Strings.enterYourPassword,
-          obscureText: !_isPasswordVisible,
-          suffixImage:
-              _isPasswordVisible ? Assets.imgVisible : Assets.imgInvisible,
-          suffixImageTap: () {
-            setState(() {
-              _isPasswordVisible = !_isPasswordVisible;
-            });
-          },
-        ),
-        const VSpace(space: 50),
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Tap(
-                onTap: () {},
-                child: Text(Strings.createAccount,
-                    style: Styles.txtMedium(color: Colorr.primaryBlue))))
-      ],
+    return Visibility(
+      visible: _isPassword,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("${_auth.firstName} ${_auth.lastName}",
+              style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
+          const VSpace(),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ProfileUI(value: _auth.firstName, size: 25, fontSize: Fonts.fontSmall),
+              const HSpace(space: 10),
+              Flexible(
+                child: Text(_auth.email,
+                    overflow: TextOverflow.ellipsis,
+                    style: Styles.txtRegular(color: Colorr.primaryBlue)),
+              ),
+            ],
+          ),
+          const VSpace(space: 30),
+          CATextField(
+            controller: _conPassword,
+            hintText: Strings.enterYourPassword,
+            obscureText: !_isPasswordVisible,
+            suffixImage:
+                _isPasswordVisible ? Assets.imgVisible : Assets.imgInvisible,
+            suffixImageTap: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+              });
+            },
+          ),
+          const VSpace(space: 50),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Tap(
+                  onTap: () {},
+                  child: Text(Strings.forgotPassword,
+                      style: Styles.txtMedium(color: Colorr.primaryBlue))))
+        ],
+      ),
     );
   }
 
@@ -156,7 +192,11 @@ class _SignInScreenState extends State<SignInScreen> {
       }
       _signInWithUniqueID(email);
     } else {
-
+      String password = _conPassword.trimText();
+      if (Utils.isNullOREmpty(password)) {
+        Common.showSnackBar(Strings.plzEnterPassword);
+        return;
+      }
     }
   }
 
@@ -165,8 +205,36 @@ class _SignInScreenState extends State<SignInScreen> {
       _loading = true;
     });
     _auth = await Auth.signInWithUniqueID(uniqueID: email);
+    if (!Utils.isNullOREmpty(_auth.email)) {
+      _continue();
+    }
     setState(() {
       _loading = false;
     });
+  }
+
+  _continue() async {
+    setState(() {
+      if (_isEmail) {
+        _isEmail = false;
+        _isPassword = true;
+      }
+    });
+  }
+
+  _back() async {
+    setState(() {
+      if (_isPassword) {
+        _isEmail = true;
+        _isPassword = false;
+        _reset();
+      }
+    });
+  }
+
+  _reset() async {
+    _auth = Auth();
+    _conEmail.clear();
+    _conPassword.clear();
   }
 }

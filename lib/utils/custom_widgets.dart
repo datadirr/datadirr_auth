@@ -987,3 +987,27 @@ class PoweredByUI extends StatelessWidget {
     );
   }
 }
+
+class ProfileUI extends StatelessWidget {
+  final String value;
+  final double? size;
+  final double? fontSize;
+  final double? radius;
+
+  const ProfileUI({super.key, required this.value, this.size, this.fontSize, this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size ?? 30,
+      height: size ?? 30,
+      decoration: Styles.boxDecoration(
+          color: Colorr.primary,
+          borderColor: Colorr.grey10,
+          radius: radius ?? 20),
+      child: Center(
+          child: Text((value.isNotEmpty ? value[0] : ""),
+              style: Styles.txtRegular(color: Colorr.white, fontSize: fontSize))),
+    );
+  }
+}

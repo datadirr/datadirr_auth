@@ -102,7 +102,7 @@ class Strings {
   static const String newMPIN = "New mPIN";
   static const String confirmMPIN = "Confirm mPIN";
   static const String plzEnterMPIN = "Please enter mPIN";
-  static const String forgotMPIN = "Forgot mPIN?";
+  static const String forgotPassword = "Forgot password?";
   static const String plzEnterName = "Please enter name";
   static const String plzEnterSocietyKey = "Please enter society key";
   static const String plzEnterUniqueID = "Please enter unique ID";
