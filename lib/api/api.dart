@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:datadirr_auth/auth/sign_in_screen.dart';
+import 'package:datadirr_auth/datadirr_auth.dart';
 import 'package:datadirr_auth/utils/common.dart';
-import 'package:datadirr_auth/utils/custom_widgets.dart';
 import 'package:datadirr_auth/utils/plugin.dart';
 import 'package:datadirr_auth/utils/strings.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Api {
@@ -92,11 +90,14 @@ class Api {
     } else {
       try {
         Map<String, String> headers = {
+          'AppID': DatadirrAuth.appID,
+          'AccessKey': DatadirrAuth.accessKey,
           'Platform': Platform.operatingSystem,
           'Class': cName,
-          'Function': fName,
-          'Authorization': ""
+          'Function': fName
         };
+
+        Common.logView(headers);
 
         final response = await http.post(Uri.parse(Plugin.baseURL),
             headers: headers, body: body);
@@ -107,12 +108,12 @@ class Api {
             if (Api.forceLogout(res)) {
               // force logout
               Common.showSnackBar(Api.message(res));
-              if (kNavigatorKey.currentContext!.mounted) {
+              /*if (kNavigatorKey.currentContext!.mounted) {
                 Navigator.pushReplacement(
                     kNavigatorKey.currentContext!,
                     MaterialPageRoute(
                         builder: (context) => const SignInScreen()));
-              }
+              }*/
               return null;
             } else {
               return res;

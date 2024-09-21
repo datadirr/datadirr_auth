@@ -1,8 +1,12 @@
 import 'package:datadirr_auth/auth/sign_in_screen.dart';
+import 'package:datadirr_auth/datadirr_auth.dart';
 import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatadirrAuth.init(
+      appID: "com.datadirr.societymanager", accessKey: "societymanager");
   runApp(const MyApp());
 }
 
@@ -18,9 +22,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SignInScreen(onSuccess: () {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const Dashboard()));
-        }));
+        home: SignInScreen(
+            deviceId: "1200",
+            onSuccess: (token) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Dashboard(token: token)));
+            }));
   }
 }
