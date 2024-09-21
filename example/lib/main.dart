@@ -1,6 +1,5 @@
-import 'package:datadirr_auth/auth/sign_in_screen.dart';
 import 'package:datadirr_auth/datadirr_auth.dart';
-import 'package:datadirr_auth_example/dashboard.dart';
+import 'package:datadirr_auth_example/Splash.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -20,15 +19,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInScreen(
-        deviceId: "1200",
-        onSuccess: (context, token) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => Dashboard(token: token)));
-        },
-      ),
+      home: Splash(),
     );
   }
 }

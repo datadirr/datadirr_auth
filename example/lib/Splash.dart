@@ -1,20 +1,37 @@
 import 'package:datadirr_auth/auth/sign_in_screen.dart';
+import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
 
-class Dashboard extends StatefulWidget {
-  final String token;
-  const Dashboard({super.key, required this.token});
+class Splash extends StatefulWidget {
+  const Splash({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<Splash> createState() => _SplashState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _SplashState extends State<Splash> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SignInScreen(
+                  deviceId: "1200",
+                  onSuccess: (context, token) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Dashboard(token: token)));
+                  })));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Text(widget.token)),
+      body: SafeArea(child: Center(child: Text("datadirr"))),
     );
   }
 }
