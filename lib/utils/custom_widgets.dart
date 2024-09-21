@@ -9,6 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_plus/dropdown_item.dart';
 import 'package:flutter_widget_function/function/utils.dart';
 
+final GlobalKey<NavigatorState> kNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<ScaffoldMessengerState> kScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class VSpace extends StatelessWidget {
   final double? space;
   final Widget? child;
@@ -30,6 +34,18 @@ class HSpace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(width: space ?? 5, child: child);
+  }
+}
+
+class CDivider extends StatelessWidget {
+  final Color? color;
+  final double? height;
+
+  const CDivider({super.key, this.color, this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(color: color ?? Colorr.grey10, height: height);
   }
 }
 
@@ -586,7 +602,7 @@ class SearchField extends StatelessWidget {
           Styles.boxDecoration(color: color ?? Colorr.grey10, radius: 30),
       child: Row(
         children: [
-          const Icon(Assets.icSearch, size: 25),
+          Image.asset(Assets.imgSearch, width: 25, height: 25),
           const HSpace(space: 10),
           Expanded(
             child: TextField(
@@ -706,7 +722,9 @@ class CAField extends StatelessWidget {
                               }
                             },
                             child: Image.asset(prefixImage!,
-                                width: 20, height: 20)),
+                                width: 20,
+                                height: 20,
+                                package: Plugin.package)),
                         const HSpace(space: 10)
                       ],
                     ),
@@ -722,7 +740,9 @@ class CAField extends StatelessWidget {
                               }
                             },
                             child: Image.asset(suffixImage!,
-                                width: 20, height: 20)),
+                                width: 20,
+                                height: 20,
+                                package: Plugin.package)),
                       ],
                     )
                 ],
@@ -790,33 +810,28 @@ class CButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: !loading,
-      replacement: Progress(color: loaderColor),
-      child: Tap(
-        onTap: () {
-          if (!loading) {
-            onTap();
-          }
-        },
-        child: Container(
-          width: width,
-          height: height ?? 40,
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
-          decoration: Styles.boxDecoration(
-              color: backColor ?? Colorr.primary,
-              borderColor: borderColor,
-              radius: radius),
-          child: Center(
-              child: Text(
-            text,
-            overflow: TextOverflow.ellipsis,
-            style: textStyle ??
-                Styles.txtRegular(
-                    color: textColor ?? Colorr.white,
-                    fontSize: fontSize),
-          )),
-        ),
+    return Tap(
+      onTap: () {
+        if (!loading) {
+          onTap();
+        }
+      },
+      child: Container(
+        width: width,
+        height: height ?? 40,
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
+        decoration: Styles.boxDecoration(
+            color: loading ? Colorr.grey50 : backColor ?? Colorr.primary,
+            borderColor: borderColor,
+            radius: radius),
+        child: Center(
+            child: Text(
+          text,
+          overflow: TextOverflow.ellipsis,
+          style: textStyle ??
+              Styles.txtRegular(
+                  color: textColor ?? Colorr.white, fontSize: fontSize),
+        )),
       ),
     );
   }
@@ -972,4 +987,3 @@ class PoweredByUI extends StatelessWidget {
     );
   }
 }
-

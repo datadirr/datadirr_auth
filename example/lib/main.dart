@@ -1,4 +1,5 @@
 import 'package:datadirr_auth/auth/sign_in_screen.dart';
+import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,8 +16,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-        home: SignInScreen());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SignInScreen(onSuccess: () {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const Dashboard()));
+        }));
   }
 }

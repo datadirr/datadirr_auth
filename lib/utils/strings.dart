@@ -1,6 +1,7 @@
 class Strings {
   Strings._();
 
+  static const String errServer = "Server error!";
   static const String errDatabase = "Database error!";
   static const String errDataParse = "Data parse error!";
   static const String errResponse = "Response error!";
@@ -95,6 +96,7 @@ class Strings {
   static const String usernameValidMsg =
       "Username must be\n\nMin 6 and Max 18 characters\nSupport lowercase or uppercase or number character\nSupport special character [._]";
   static const String password = "Password";
+  static const String enterYourPassword = "Enter your password";
   static const String confirmPassword = "Confirm Password";
   static const String mPIN = "mPIN";
   static const String newMPIN = "New mPIN";

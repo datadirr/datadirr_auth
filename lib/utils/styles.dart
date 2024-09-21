@@ -28,7 +28,7 @@ class Styles {
       TextDecoration? decoration}) {
     return TextStyle(
         fontFamily: Fonts.fontProductSansMedium,
-        fontWeight: fontWeight ?? FontWeight.w600,
+        fontWeight: fontWeight ?? FontWeight.w500,
         fontSize: fontSize ?? Fonts.fontNormal,
         color: color,
         decorationColor: decorationColor,
