@@ -15,7 +15,7 @@ import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart
 
 class SignInScreen extends StatefulWidget {
   final String deviceId;
-  final Function(String token) onSuccess;
+  final Function(BuildContext context, String token) onSuccess;
 
   const SignInScreen(
       {super.key, required this.deviceId, required this.onSuccess});
@@ -151,18 +151,23 @@ class _SignInScreenState extends State<SignInScreen> {
           Text("${_auth.firstName} ${_auth.lastName}",
               style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
           const VSpace(),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ProfileUI(
-                  value: _auth.firstName, size: 25, fontSize: Fonts.fontSmall),
-              const HSpace(space: 10),
-              Flexible(
-                child: Text(_auth.email,
-                    overflow: TextOverflow.ellipsis,
-                    style: Styles.txtRegular(color: Colorr.primaryBlue)),
-              ),
-            ],
+          Tap(
+            onTap: () {
+              _back();
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ProfileUI(
+                    value: _auth.firstName, size: 25, fontSize: Fonts.fontSmall),
+                const HSpace(space: 10),
+                Flexible(
+                  child: Text(_auth.email,
+                      overflow: TextOverflow.ellipsis,
+                      style: Styles.txtRegular(color: Colorr.primaryBlue)),
+                ),
+              ],
+            ),
           ),
           const VSpace(space: 30),
           CATextField(
@@ -231,7 +236,7 @@ class _SignInScreenState extends State<SignInScreen> {
     String token = await Auth.signIn(
         deviceId: widget.deviceId, uniqueID: email, password: password);
     if (!Utils.isNullOREmpty(token)) {
-      widget.onSuccess(token);
+      widget.onSuccess(context, token);
     }
     setState(() {
       _loading = false;

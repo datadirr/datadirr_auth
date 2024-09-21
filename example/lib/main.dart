@@ -21,14 +21,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SignInScreen(
-            deviceId: "1200",
-            onSuccess: (token) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Dashboard(token: token)));
-            }));
+      debugShowCheckedModeBanner: false,
+      home: SignInScreen(
+        deviceId: "1200",
+        onSuccess: (context, token) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => Dashboard(token: token)));
+        },
+      ),
+    );
   }
 }
