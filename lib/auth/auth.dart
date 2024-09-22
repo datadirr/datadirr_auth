@@ -108,7 +108,7 @@ class Auth {
   static Future<List<Auth>> authLinkedByDevice() async {
     List<Auth> auths = [];
     dynamic res =
-    await Api.request(cName: Api.cAuth, fName: Api.fAuthLinkedByDevice);
+        await Api.request(cName: Api.cAuth, fName: Api.fAuthLinkedByDevice);
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
