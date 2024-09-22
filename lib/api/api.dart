@@ -35,8 +35,8 @@ class Api {
   static Future<dynamic> request(
       {required String cName,
       required String fName,
-      Map<String, String>? headers,
       Map<String, String>? body,
+      String token = "",
       bool isMultipartRequest = false,
       String fileDataParam = 'File'}) async {
     bool isNetwork = await Common.isNetworkConnected();
@@ -94,8 +94,10 @@ class Api {
           'AppID': DatadirrAuth.appID,
           'AccessKey': DatadirrAuth.accessKey,
           'Platform': Platform.operatingSystem,
+          'DeviceId': DatadirrAuth.deviceId,
           'Class': cName,
-          'Function': fName
+          'Function': fName,
+          'Authorization': token
         };
 
         Common.logView(headers);

@@ -7,6 +7,7 @@ import 'package:datadirr_auth/utils/fonts.dart';
 import 'package:datadirr_auth/utils/plugin.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_widget_function/function/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,18 @@ class Common {
       dev.log(logStr);
     } else {
       dev.log("NULL");
+    }
+  }
+
+  static Future<String> getDeviceId() async {
+    if (Platform.isAndroid) {
+      return ((await DeviceInfoPlugin().androidInfo).id);
+    } else if (Platform.isIOS) {
+      return ((await DeviceInfoPlugin().iosInfo).identifierForVendor) ?? "";
+    } else if (Platform.isWindows) {
+      return ((await DeviceInfoPlugin().windowsInfo).deviceId) ?? "";
+    } else {
+      return "";
     }
   }
 

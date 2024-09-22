@@ -5,6 +5,7 @@ import 'package:datadirr_auth/utils/strings.dart';
 
 class Auth {
   String token;
+  String deviceId;
   String firstName;
   String middleName;
   String lastName;
@@ -12,6 +13,7 @@ class Auth {
 
   Auth(
       {this.token = "",
+      this.deviceId = "",
       this.firstName = "",
       this.middleName = "",
       this.lastName = "",
@@ -20,6 +22,7 @@ class Auth {
   factory Auth.fromJson(Map<String, dynamic> json) {
     return Auth(
         token: json['token'] ?? "",
+        deviceId: json['deviceId'] ?? "",
         firstName: json['firstName'] ?? "",
         middleName: json['middleName'] ?? "",
         lastName: json['lastName'] ?? "",
@@ -73,5 +76,24 @@ class Auth {
       Common.showSnackBar(Strings.errDataParse);
     }
     return token;
+  }
+
+  static Future<Auth> signAuth({required String uniqueID}) async {
+    Auth auth = Auth();
+    var body = {"uniqueID": Convert.stringToBase64(uniqueID)};
+    dynamic res = await Api.request(
+        cName: Api.cAuth, fName: Api.fSignInWithUniqueID, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          auth = Auth.fromJson(Api.result(res)["auth"]);
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return auth;
   }
 }
