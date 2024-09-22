@@ -28,6 +28,7 @@ class Api {
   static const String fSignIn = 'signIn';
   static const String fSignOut = 'signOut';
   static const String fSignAuth = 'signAuth';
+  static const String fAuthLinkedByDevice = 'authLinkedByDevice';
 
   //body params
   static const String bIsDetails = 'isDetails';

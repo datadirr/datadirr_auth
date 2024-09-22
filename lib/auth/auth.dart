@@ -6,27 +6,36 @@ import 'package:datadirr_auth/utils/strings.dart';
 class Auth {
   String token;
   String deviceId;
+  String authID;
+  String username;
+  String email;
+  String mobile;
   String firstName;
   String middleName;
   String lastName;
-  String email;
 
   Auth(
       {this.token = "",
       this.deviceId = "",
+      this.authID = "",
+      this.username = "",
+      this.email = "",
+      this.mobile = "",
       this.firstName = "",
       this.middleName = "",
-      this.lastName = "",
-      this.email = ""});
+      this.lastName = ""});
 
   factory Auth.fromJson(Map<String, dynamic> json) {
     return Auth(
         token: json['token'] ?? "",
         deviceId: json['deviceId'] ?? "",
+        authID: json['deviceId'] ?? "",
+        username: json['username'] ?? "",
+        email: json['email'] ?? "",
+        mobile: json['mobile'] ?? "",
         firstName: json['firstName'] ?? "",
         middleName: json['middleName'] ?? "",
-        lastName: json['lastName'] ?? "",
-        email: json['email'] ?? "");
+        lastName: json['lastName'] ?? "");
   }
 
   static fromJsonToList(dynamic list) {
@@ -78,11 +87,10 @@ class Auth {
     return token;
   }
 
-  static Future<Auth> signAuth({required String uniqueID}) async {
+  static Future<Auth> signAuth({required String token}) async {
     Auth auth = Auth();
-    var body = {"uniqueID": Convert.stringToBase64(uniqueID)};
-    dynamic res = await Api.request(
-        cName: Api.cAuth, fName: Api.fSignInWithUniqueID, body: body);
+    dynamic res =
+        await Api.request(cName: Api.cAuth, fName: Api.fSignAuth, token: token);
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
@@ -95,5 +103,23 @@ class Auth {
       Common.showSnackBar(Strings.errDataParse);
     }
     return auth;
+  }
+
+  static Future<List<Auth>> authLinkedByDevice() async {
+    List<Auth> auths = [];
+    dynamic res =
+    await Api.request(cName: Api.cAuth, fName: Api.fAuthLinkedByDevice);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          auths = Auth.fromJsonToList(Api.result(res)["auths"]);
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return auths;
   }
 }
