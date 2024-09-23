@@ -73,11 +73,14 @@ class Strings {
 
   static String otpSentToEmail(String email) => "OTP sent to $email";
   static const String createAccount = "Create account";
+  static const String addAnotherAccount = "Add another account";
   static const String doNotHaveAnAccount = "Don't have an account?";
   static const String alreadyHaveAnAccount = "Already have an account!";
   static const String signIn = "Sign in";
   static const String signOut = "Sign out";
+  static const String signOutAllAccounts = "Sign out of all accounts";
   static const String signInMsg = "with your datadirr account.";
+  static const String signInAuthMsg = "Sign in with your datadirr accounts.";
   static const String settings = "Settings";
   static const String mobile = "Mobile";
   static const String email = "Email";

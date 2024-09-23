@@ -1,3 +1,4 @@
+import 'package:datadirr_auth/auth/auth.dart';
 import 'package:datadirr_auth/auth/sign_in_screen.dart';
 import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,9 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
+    _init();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Navigator.pushReplacement(
+      /*Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => SignInScreen(
@@ -24,7 +26,7 @@ class _SplashState extends State<Splash> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Dashboard(token: token)));
-                  })));
+                  })));*/
     });
   }
 
@@ -34,4 +36,10 @@ class _SplashState extends State<Splash> {
       body: SafeArea(child: Center(child: Text("datadirr"))),
     );
   }
+
+  _init() async {
+    List<Auth> list = await Auth.authLinkedByDevice();
+    print(list.length);
+  }
+
 }

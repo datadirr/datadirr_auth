@@ -160,7 +160,7 @@ class Common {
                             }),
                       ],
                     ),
-                    const VSpace(),
+                    const VSpace(space: 5),
                   ],
                 ),
               ),

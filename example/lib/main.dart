@@ -1,3 +1,4 @@
+import 'package:datadirr_auth/auth/auth_linked_device.dart';
 import 'package:datadirr_auth/datadirr_auth.dart';
 import 'package:datadirr_auth_example/Splash.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      home: AuthLinkedDevice(),
     );
   }
 }

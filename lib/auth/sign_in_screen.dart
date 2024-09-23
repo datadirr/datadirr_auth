@@ -4,7 +4,6 @@ import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/common.dart';
 import 'package:datadirr_auth/utils/custom_widgets.dart';
 import 'package:datadirr_auth/utils/fonts.dart';
-import 'package:datadirr_auth/utils/plugin.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -85,8 +84,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child:
                             Column(mainAxisSize: MainAxisSize.min, children: [
                           const VSpace(space: 20),
-                          Image.asset(Assets.imgDatadirrTxt,
-                              width: 100, package: Plugin.package),
+                          const CImage(assetName: Assets.imgDatadirrTxt, width: 100),
                           const VSpace(space: 20),
                           _emailUI(),
                           _passwordUI(),
@@ -122,7 +120,7 @@ class _SignInScreenState extends State<SignInScreen> {
         children: [
           Text(Strings.signIn,
               style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-          const VSpace(),
+          const VSpace(space: 5),
           Text(Strings.signInMsg,
               style: Styles.txtRegular(color: Colorr.primaryBlue)),
           const VSpace(space: 30),
@@ -150,7 +148,7 @@ class _SignInScreenState extends State<SignInScreen> {
         children: [
           Text("${_auth.firstName} ${_auth.lastName}",
               style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-          const VSpace(),
+          const VSpace(space: 5),
           Tap(
             onTap: () {
               _back();
@@ -160,7 +158,7 @@ class _SignInScreenState extends State<SignInScreen> {
               children: [
                 ProfileUI(
                     value: _auth.firstName, size: 25, fontSize: Fonts.fontSmall),
-                const HSpace(space: 10),
+                const HSpace(),
                 Flexible(
                   child: Text(_auth.email,
                       overflow: TextOverflow.ellipsis,

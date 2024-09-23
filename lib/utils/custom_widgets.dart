@@ -21,7 +21,7 @@ class VSpace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: space ?? 5, child: child);
+    return SizedBox(height: space ?? 10, child: child);
   }
 }
 
@@ -33,7 +33,7 @@ class HSpace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: space ?? 5, child: child);
+    return SizedBox(width: space ?? 10, child: child);
   }
 }
 
@@ -555,7 +555,7 @@ class CALabel extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const HSpace(),
+                const HSpace(space: 5),
                 Tap(
                   onTap: () {
                     if (onTabTap != null) {
@@ -603,7 +603,7 @@ class SearchField extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(Assets.imgSearch, width: 25, height: 25),
-          const HSpace(space: 10),
+          const HSpace(),
           Expanded(
             child: TextField(
               controller: controller,
@@ -674,7 +674,7 @@ class CAField extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const HSpace(),
+                    const HSpace(space: 5),
                     Tap(
                       onTap: () {
                         if (onTabTap != null) {
@@ -725,14 +725,14 @@ class CAField extends StatelessWidget {
                                 width: 20,
                                 height: 20,
                                 package: Plugin.package)),
-                        const HSpace(space: 10)
+                        const HSpace()
                       ],
                     ),
                   Expanded(child: child),
                   if (!Utils.isNullOREmpty(suffixImage))
                     Row(
                       children: [
-                        const HSpace(space: 10),
+                        const HSpace(),
                         Tap(
                             onTap: () {
                               if (suffixImageTap != null) {
@@ -821,7 +821,7 @@ class CButton extends StatelessWidget {
         height: height ?? 40,
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
         decoration: Styles.boxDecoration(
-            color: loading ? Colorr.grey50 : backColor ?? Colorr.primary,
+            color: loading ? Colorr.grey20 : backColor ?? Colorr.primary,
             borderColor: borderColor,
             radius: radius),
         child: Center(
@@ -994,7 +994,8 @@ class ProfileUI extends StatelessWidget {
   final double? fontSize;
   final double? radius;
 
-  const ProfileUI({super.key, required this.value, this.size, this.fontSize, this.radius});
+  const ProfileUI(
+      {super.key, required this.value, this.size, this.fontSize, this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -1007,7 +1008,23 @@ class ProfileUI extends StatelessWidget {
           radius: radius ?? 20),
       child: Center(
           child: Text((value.isNotEmpty ? value[0] : ""),
-              style: Styles.txtRegular(color: Colorr.white, fontSize: fontSize))),
+              style:
+                  Styles.txtRegular(color: Colorr.white, fontSize: fontSize))),
     );
+  }
+}
+
+class CImage extends StatelessWidget {
+  final String assetName;
+  final double? width;
+  final double? height;
+
+  const CImage(
+      {super.key, required this.assetName, this.width, this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(assetName,
+        width: width, height: height, package: Plugin.package);
   }
 }
