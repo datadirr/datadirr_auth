@@ -1,6 +1,6 @@
 import 'package:datadirr_auth/auth/auth_linked_device.dart';
 import 'package:datadirr_auth/datadirr_auth.dart';
-import 'package:datadirr_auth_example/Splash.dart';
+import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -20,9 +20,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthLinkedDevice(),
+      home: AuthLinkedDevice(onSuccess: (context, auth) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => Dashboard(auth: auth)));
+      }),
     );
   }
 }

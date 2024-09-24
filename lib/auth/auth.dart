@@ -61,13 +61,10 @@ class Auth {
     return auth;
   }
 
-  static Future<String> signIn(
-      {required String deviceId,
-      required String uniqueID,
-      required String password}) async {
-    String token = "";
+  static Future<Auth?> signIn(
+      {required String uniqueID, required String password}) async {
+    Auth? auth;
     var body = {
-      "deviceId": deviceId,
       "uniqueID": Convert.stringToBase64(uniqueID),
       "password": Convert.stringToBase64(password)
     };
@@ -76,7 +73,7 @@ class Auth {
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
-          token = Api.result(res)["token"];
+          auth = Auth.fromJson(Api.result(res)["auth"]);
         } else {
           Common.showSnackBar(Api.message(res));
         }
@@ -84,7 +81,7 @@ class Auth {
     } catch (_) {
       Common.showSnackBar(Strings.errDataParse);
     }
-    return token;
+    return auth;
   }
 
   static Future<Auth> signAuth({required String token}) async {
@@ -121,5 +118,40 @@ class Auth {
       Common.showSnackBar(Strings.errDataParse);
     }
     return auths;
+  }
+
+  static Future<bool> signOut({required String token}) async {
+    bool success = false;
+    dynamic res =
+        await Api.request(cName: Api.cAuth, fName: Api.fSignOut, token: token);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
+  }
+
+  static Future<bool> signOutAll() async {
+    bool success = false;
+    dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignOutAll);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
   }
 }

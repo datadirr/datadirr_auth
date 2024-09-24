@@ -27,6 +27,7 @@ class Api {
   static const String fSignInWithUniqueID = 'signInWithUniqueID';
   static const String fSignIn = 'signIn';
   static const String fSignOut = 'signOut';
+  static const String fSignOutAll = 'signOutAll';
   static const String fSignAuth = 'signAuth';
   static const String fAuthLinkedByDevice = 'authLinkedByDevice';
 

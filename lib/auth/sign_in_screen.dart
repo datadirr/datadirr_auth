@@ -13,11 +13,10 @@ import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart';
 
 class SignInScreen extends StatefulWidget {
-  final String deviceId;
-  final Function(BuildContext context, String token) onSuccess;
+  final Function(BuildContext context, Auth auth) onSuccess;
+  final Function()? onBack;
 
-  const SignInScreen(
-      {super.key, required this.deviceId, required this.onSuccess});
+  const SignInScreen({super.key, required this.onSuccess, this.onBack});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -84,7 +83,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         child:
                             Column(mainAxisSize: MainAxisSize.min, children: [
                           const VSpace(space: 20),
-                          const CImage(assetName: Assets.imgDatadirrTxt, width: 100),
+                          const CImage(
+                              assetName: Assets.imgDatadirrTxt, width: 100),
                           const VSpace(space: 20),
                           _emailUI(),
                           _passwordUI(),
@@ -157,7 +157,9 @@ class _SignInScreenState extends State<SignInScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ProfileUI(
-                    value: _auth.firstName, size: 25, fontSize: Fonts.fontSmall),
+                    value: _auth.firstName,
+                    size: 25,
+                    fontSize: Fonts.fontSmall),
                 const HSpace(),
                 Flexible(
                   child: Text(_auth.email,
@@ -231,10 +233,11 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {
       _loading = true;
     });
-    String token = await Auth.signIn(
-        deviceId: widget.deviceId, uniqueID: email, password: password);
-    if (!Utils.isNullOREmpty(token)) {
-      widget.onSuccess(context, token);
+    Auth? auth = await Auth.signIn(uniqueID: email, password: password);
+    if (auth != null && mounted) {
+      widget.onSuccess(context, auth);
+    } else {
+      Common.showSnackBar(Strings.plzTryAgain);
     }
     setState(() {
       _loading = false;
