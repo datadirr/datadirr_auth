@@ -13,23 +13,26 @@ import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart';
 import 'package:validation_pro/validate.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class ForgotPassword extends StatefulWidget {
+  final String uniqueID;
+  const ForgotPassword({super.key, required this.uniqueID});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _ForgotPasswordState extends State<ForgotPassword> {
   bool _loading = false;
-  final TextEditingController _conFirstName = TextEditingController();
+  final TextEditingController _conFirstName =
+      TextEditingController(text: "Rohan");
   final TextEditingController _conMiddleName = TextEditingController();
-  final TextEditingController _conLastName = TextEditingController();
-  final TextEditingController _conMobile = TextEditingController();
+  final TextEditingController _conLastName =
+      TextEditingController(text: "Patel");
+  final TextEditingController _conMobile =
+      TextEditingController(text: "9876543210");
   final TextEditingController _conEmail = TextEditingController();
   final TextEditingController _conOTP = TextEditingController();
   final TextEditingController _conPassword = TextEditingController();
-  final TextEditingController _conConfirmPassword = TextEditingController();
   bool _isPasswordVisible = false;
 
   bool _isPersonalDetails = false;
@@ -138,9 +141,7 @@ class _SignUpState extends State<SignUp> {
             controller: _conLastName,
             hintText: Strings.lastNameSurname,
           ),
-          const VSpace(space: 20),
-          const CDivider(),
-          const VSpace(space: 20),
+          const VSpace(),
           CATextField(
             controller: _conMobile,
             hintText: Strings.mobileNumber,
@@ -248,21 +249,6 @@ class _SignUpState extends State<SignUp> {
             },
           ),
           const VSpace(),
-          CATextField(
-            controller: _conConfirmPassword,
-            hintText: Strings.confirmPassword,
-            obscureText: !_isPasswordVisible,
-            suffixImage:
-                _isPasswordVisible ? Assets.imgVisible : Assets.imgInvisible,
-            suffixImageTap: () {
-              if (mounted) {
-                setState(() {
-                  _isPasswordVisible = !_isPasswordVisible;
-                });
-              }
-            },
-          ),
-          const VSpace(),
           Align(
               alignment: Alignment.centerLeft,
               child: Tap(
@@ -276,92 +262,6 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  _checkValidDetailsOTP({bool send = false}) async {
-    String email = _conEmail.trimText();
-    String otp = _conOTP.trimText();
-    if (Utils.isNullOREmpty(email)) {
-      Common.showSnackBar(Strings.plzEnterEmail);
-      return;
-    }
-    if (!Validate.isEmail(email)) {
-      Common.showSnackBar(Strings.plzEnterValidEmail);
-      return;
-    }
-
-    if (_isOTPSent && !send) {
-      if (Utils.isNullOREmpty(otp)) {
-        Common.showSnackBar(Strings.plzEnterOTP);
-        return;
-      }
-
-      _verifyOTP(email, otp);
-    } else {
-      bool success = await _signInWithUniqueID(email);
-      if (success) {
-        _sendOTP(email);
-      }
-    }
-  }
-
-  _sendOTP(email) async {
-    if (mounted) {
-      setState(() {
-        _loading = true;
-      });
-    }
-    bool success = await Auth.sendOTPToEmail(email: email);
-    if (success) {
-      _isOTPSent = true;
-    } else {
-      _isOTPSent = false;
-    }
-    if (mounted) {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _verifyOTP(email, otp) async {
-    if (mounted) {
-      setState(() {
-        _loading = true;
-      });
-    }
-    bool success = await Auth.verifyOTPByEmail(email: email, otp: otp);
-    if (success) {
-      _isVerified = true;
-    } else {
-      _isVerified = false;
-    }
-    if (mounted) {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _signInWithUniqueID(String email) async {
-    bool success = false;
-    if (mounted) {
-      setState(() {
-        _loading = true;
-      });
-    }
-    Auth? auth = await Auth.signInWithUniqueID(uniqueID: email, showErr: false);
-    if (auth == null) {
-      success = true;
-    } else {
-      Common.showSnackBar(Strings.emailAlreadyRegistered);
-    }
-    if (mounted) {
-      setState(() {
-        _loading = false;
-      });
-    }
-    return success;
-  }
-
   _checkValidDetails() {
     String firstName = _conFirstName.trimText();
     String middleName = _conMiddleName.trimText();
@@ -369,7 +269,6 @@ class _SignUpState extends State<SignUp> {
     String mobile = _conMobile.trimText();
     String email = _conEmail.trimText();
     String password = _conPassword.trimText();
-    String confirmPassword = _conConfirmPassword.trimText();
     if (_isPersonalDetails) {
       if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
         Common.showSnackBar(Strings.plzEnterYourName);
@@ -394,10 +293,10 @@ class _SignUpState extends State<SignUp> {
           Common.showSnackBar(Strings.plzEnterEmail);
           return;
         }
-        if (!Validate.isEmail(email)) {
-          Common.showSnackBar(Strings.plzEnterValidEmail);
-          return;
-        }
+        /*if (!Validate.isEmail(email)) {
+        Common.showSnackBar(Strings.plzEnterValidEmail);
+        return;
+      }*/
         _continue();
       } else {
         Common.showSnackBar(Strings.plzVerifyYourEmail);
@@ -413,13 +312,13 @@ class _SignUpState extends State<SignUp> {
         return;
       }
       if (Utils.isNullOREmpty(email)) {
-        Common.showSnackBar(Strings.plzEnterEmail);
+        Common.showSnackBar(Strings.errInvalid);
         return;
       }
-      if (!Validate.isEmail(email)) {
+      /*if (!Validate.isEmail(email)) {
         Common.showSnackBar(Strings.plzEnterValidEmail);
         return;
-      }
+      }*/
       if (Utils.isNullOREmpty(password)) {
         Common.showSnackBar(Strings.plzEnterPassword);
         return;
@@ -428,16 +327,29 @@ class _SignUpState extends State<SignUp> {
         Common.showSnackBar(Strings.plzEnterValidPassword);
         return;
       }
-      if (Utils.isNullOREmpty(confirmPassword)) {
-        Common.showSnackBar(Strings.plzEnterConfirmPassword);
-        return;
-      }
-      if (!Utils.equals(password, confirmPassword, ignoreCase: false)) {
-        Common.showSnackBar(Strings.passwordDoesNotMatch);
-        return;
-      }
       _signup(firstName, middleName, lastName, mobile, email, password);
     }
+  }
+
+  _signInWithUniqueID(String email) async {
+    bool success = false;
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    Auth? auth = await Auth.signInWithUniqueID(uniqueID: email, showErr: false);
+    if (auth == null) {
+      success = true;
+    } else {
+      Common.showSnackBar(Strings.emailAlreadyRegistered);
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
+    return success;
   }
 
   _signup(String firstName, String middleName, String lastName, String mobile,
@@ -507,6 +419,71 @@ class _SignUpState extends State<SignUp> {
           }
         });
       }
+    }
+  }
+
+  _checkValidDetailsOTP({bool send = false}) async {
+    String email = _conEmail.trimText();
+    String otp = _conOTP.trimText();
+    if (Utils.isNullOREmpty(email)) {
+      Common.showSnackBar(Strings.plzEnterEmail);
+      return;
+    }
+    if (!Validate.isEmail(email)) {
+      Common.showSnackBar(Strings.plzEnterValidEmail);
+      return;
+    }
+
+    if (_isOTPSent && !send) {
+      if (Utils.isNullOREmpty(otp)) {
+        Common.showSnackBar(Strings.plzEnterOTP);
+        return;
+      }
+
+      _verifyOTP(email, otp);
+    } else {
+      bool success = await _signInWithUniqueID(email);
+      if (success) {
+        _sendOTP(email);
+      }
+    }
+  }
+
+  _sendOTP(email) async {
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    bool success = await Auth.sendOTPToEmail(email: email);
+    if (success) {
+      _isOTPSent = true;
+    } else {
+      _isOTPSent = false;
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  _verifyOTP(email, otp) async {
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    bool success = await Auth.verifyOTPByEmail(email: email, otp: otp);
+    if (success) {
+      _isVerified = true;
+    } else {
+      _isVerified = false;
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 }

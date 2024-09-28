@@ -116,7 +116,7 @@ class Strings {
   static const String usernameValidMsg =
       "Username must be\n\nMin 6 and Max 18 characters\nSupport lowercase or uppercase or number character\nSupport special character [._]";
   static const String password = "Password";
-  static const String enterYourPassword = "Enter your password";
+  static const String enterPassword = "Enter password";
   static const String confirmPassword = "Confirm Password";
   static const String mPIN = "mPIN";
   static const String newMPIN = "New mPIN";
@@ -139,10 +139,11 @@ class Strings {
   static const String plzEnterWhatsappNumber = "Please enter whatsapp number";
   static const String plzEnterValidWhatsappNumber =
       "Please enter valid whatsapp number";
-  static const String plzEnterPassword = "Please enter password";
-  static const String plzEnterValidPassword = "Please enter valid password";
   static const String passwordValidMsg =
       "Password must have\n  - Min 6 and Max 12 characters\n  - At least one uppercase character\n  - At least one lowercase character\n  - At least one number\n  - At least one special character [@#\u0024!%?]";
+  static const String plzEnterPassword = "Please enter password";
+  static const String plzEnterValidPassword = "Please enter valid password";
+  static const String plzEnterConfirmPassword = "Please enter confirm password";
   static const String passwordDoesNotMatch =
       "Password and Confirm Password does not match";
   static const String currency = "Currency";

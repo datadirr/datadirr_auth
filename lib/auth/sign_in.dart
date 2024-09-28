@@ -1,4 +1,5 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/auth/forgot_password.dart';
 import 'package:datadirr_auth/auth/sign_up.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
@@ -182,7 +183,7 @@ class _SignInState extends State<SignIn> {
                 const VSpace(space: 30),
                 CATextField(
                   controller: _conPassword,
-                  hintText: Strings.enterYourPassword,
+                  hintText: Strings.enterPassword,
                   obscureText: !_isPasswordVisible,
                   suffixImage: _isPasswordVisible
                       ? Assets.imgVisible
@@ -224,7 +225,7 @@ class _SignInState extends State<SignIn> {
       _signInWithUniqueID(email);
     } else if (_isPassword) {
       if (Utils.isNullOREmpty(email)) {
-        Common.showSnackBar(Strings.errInvalid);
+        Common.showSnackBar(Strings.plzEnterEmail);
         return;
       }
       if (Utils.isNullOREmpty(password)) {
@@ -306,7 +307,14 @@ class _SignInState extends State<SignIn> {
   }
 
   _gotoForgotPassword() {
+    String email = _conEmail.trimText();
+    if (Utils.isNullOREmpty(email)) {
+      Common.showSnackBar(Strings.plzEnterEmail);
+      return;
+    }
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const SignUp()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => ForgotPassword(uniqueID: email)));
   }
 }
