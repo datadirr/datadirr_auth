@@ -79,7 +79,7 @@ class _SearchAuthState extends State<SearchAuth> {
                     const VSpace(),
                     Flexible(
                       child: _loading
-                          ? const Progress()
+                          ? const CProgress()
                           : ListView.separated(
                               shrinkWrap: true,
                               itemCount: _auths.length,

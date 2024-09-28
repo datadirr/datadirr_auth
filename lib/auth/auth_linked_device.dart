@@ -42,7 +42,7 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
               backgroundColor: Colorr.white,
               body: SafeArea(
                   child: _loading
-                      ? const Progress()
+                      ? const CProgress()
                       : _auths.isEmpty
                           ? SignIn(onSuccess: widget.onSuccess)
                           : Padding(

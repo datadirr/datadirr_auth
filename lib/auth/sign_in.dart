@@ -51,7 +51,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return KeyboardDismiss(
       child: PopScope(
-        canPop: _isEmail,
+        canPop: (_isEmail && !_loading),
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
@@ -63,36 +63,48 @@ class _SignInState extends State<SignIn> {
           child: Scaffold(
             backgroundColor: Colorr.white,
             body: SafeArea(
-                child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        const VSpace(space: 20),
-                        const CImage(
-                            assetName: Assets.imgDatadirrTxt, width: 100),
-                        const VSpace(space: 20),
-                        _emailUI(),
-                        _passwordUI(),
-                      ]),
+                child: Column(
+              children: [
+                Visibility(visible: _loading, child: const LProgress()),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const VSpace(space: 20),
+                                  const CImage(
+                                      assetName: Assets.imgDatadirrTxt,
+                                      width: 100),
+                                  const VSpace(space: 20),
+                                  _emailUI(),
+                                  _passwordUI(),
+                                ]),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: FlexWidth(
+                            child: CButton(
+                                text: Strings.next,
+                                loading: _loading,
+                                onTap: () {
+                                  if (!_loading) {
+                                    _checkValidDetails();
+                                  }
+                                }),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: FlexWidth(
-                      child: CButton(
-                          text: Strings.next,
-                          loading: _loading,
-                          onTap: () {
-                            _checkValidDetails();
-                          }),
-                    ),
-                  )
-                ],
-              ),
+                ),
+              ],
             )),
           ),
         ),
@@ -122,7 +134,9 @@ class _SignInState extends State<SignIn> {
               alignment: Alignment.centerLeft,
               child: Tap(
                   onTap: () {
-                    _gotoSignUp();
+                    if (!_loading) {
+                      _gotoSignUp();
+                    }
                   },
                   child: Text(Strings.createAccount,
                       style: Styles.txtMedium(color: Colorr.primaryBlue)))),
@@ -185,7 +199,11 @@ class _SignInState extends State<SignIn> {
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Tap(
-                        onTap: () {},
+                        onTap: () {
+                          if (!_loading) {
+                            _gotoForgotPassword();
+                          }
+                        },
                         child: Text(Strings.forgotPassword,
                             style:
                                 Styles.txtMedium(color: Colorr.primaryBlue)))),
@@ -268,19 +286,27 @@ class _SignInState extends State<SignIn> {
   }
 
   _back() async {
-    if (mounted) {
-      setState(() {
-        if (_isPassword) {
-          _isEmail = true;
-          _isPassword = false;
+    if (!_loading) {
+      if (mounted) {
+        setState(() {
+          if (_isPassword) {
+            _isEmail = true;
+            _isPassword = false;
 
-          _auth = null;
-        }
-      });
+            _auth = null;
+          }
+        });
+      }
     }
   }
 
   _gotoSignUp() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const SignUp()));
+  }
+
+  _gotoForgotPassword() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const SignUp()));
   }
 }

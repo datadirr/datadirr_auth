@@ -73,15 +73,26 @@ class Tap extends StatelessWidget {
   }
 }
 
-class Progress extends StatelessWidget {
+class CProgress extends StatelessWidget {
   final Color? color;
 
-  const Progress({super.key, this.color});
+  const CProgress({super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
     return Center(
         child: CircularProgressIndicator(color: color ?? Colorr.primary));
+  }
+}
+
+class LProgress extends StatelessWidget {
+  final Color? color;
+
+  const LProgress({super.key, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return LinearProgressIndicator(color: color ?? Colorr.primary);
   }
 }
 

@@ -44,7 +44,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return KeyboardDismiss(
       child: PopScope(
-        canPop: _isPersonalDetails,
+        canPop: (_isPersonalDetails && !_loading),
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
@@ -56,37 +56,49 @@ class _SignUpState extends State<SignUp> {
           child: Scaffold(
             backgroundColor: Colorr.white,
             body: SafeArea(
-                child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        const VSpace(space: 20),
-                        const CImage(
-                            assetName: Assets.imgDatadirrTxt, width: 100),
-                        const VSpace(space: 20),
-                        _personalDetailsUI(),
-                        _emailUI(),
-                        _passwordUI(),
-                      ]),
+                child: Column(
+              children: [
+                Visibility(visible: _loading, child: const LProgress()),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const VSpace(space: 20),
+                                  const CImage(
+                                      assetName: Assets.imgDatadirrTxt,
+                                      width: 100),
+                                  const VSpace(space: 20),
+                                  _personalDetailsUI(),
+                                  _emailUI(),
+                                  _passwordUI(),
+                                ]),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: FlexWidth(
+                            child: CButton(
+                                text: Strings.next,
+                                loading: _loading,
+                                onTap: () {
+                                  if (!_loading) {
+                                    _checkValidDetails();
+                                  }
+                                }),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: FlexWidth(
-                      child: CButton(
-                          text: Strings.next,
-                          loading: _loading,
-                          onTap: () {
-                            _checkValidDetails();
-                          }),
-                    ),
-                  )
-                ],
-              ),
+                ),
+              ],
             )),
           ),
         ),
@@ -336,20 +348,22 @@ class _SignUpState extends State<SignUp> {
   }
 
   _back() async {
-    if (mounted) {
-      setState(() {
-        if (_isPassword) {
-          _isPersonalDetails = false;
-          _isEmail = true;
-          _isPassword = false;
-        } else {
-          if (_isEmail) {
-            _isPersonalDetails = true;
-            _isEmail = false;
+    if (!_loading) {
+      if (mounted) {
+        setState(() {
+          if (_isPassword) {
+            _isPersonalDetails = false;
+            _isEmail = true;
             _isPassword = false;
+          } else {
+            if (_isEmail) {
+              _isPersonalDetails = true;
+              _isEmail = false;
+              _isPassword = false;
+            }
           }
-        }
-      });
+        });
+      }
     }
   }
 }
