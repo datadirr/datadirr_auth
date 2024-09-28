@@ -1,9 +1,7 @@
 import 'package:datadirr_auth/utils/common.dart';
-
 import 'datadirr_auth_platform_interface.dart';
 
 class DatadirrAuth {
-  String _dd = "";
   String deviceId = "";
   String appID = "";
   String accessKey = "";

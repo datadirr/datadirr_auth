@@ -307,14 +307,14 @@ class _SignInState extends State<SignIn> {
   }
 
   _gotoForgotPassword() {
-    String email = _conEmail.trimText();
-    if (Utils.isNullOREmpty(email)) {
+    if (_auth != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ForgotPassword(auth: _auth!)));
+    } else {
       Common.showSnackBar(Strings.plzEnterEmail);
       return;
     }
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ForgotPassword(uniqueID: email)));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/auth/verification.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/common.dart';
@@ -14,8 +15,9 @@ import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart
 import 'package:validation_pro/validate.dart';
 
 class ForgotPassword extends StatefulWidget {
-  final String uniqueID;
-  const ForgotPassword({super.key, required this.uniqueID});
+  final Auth auth;
+
+  const ForgotPassword({super.key, required this.auth});
 
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
@@ -23,19 +25,11 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   bool _loading = false;
-  final TextEditingController _conFirstName =
-      TextEditingController(text: "Rohan");
-  final TextEditingController _conMiddleName = TextEditingController();
-  final TextEditingController _conLastName =
-      TextEditingController(text: "Patel");
-  final TextEditingController _conMobile =
-      TextEditingController(text: "9876543210");
-  final TextEditingController _conEmail = TextEditingController();
   final TextEditingController _conOTP = TextEditingController();
   final TextEditingController _conPassword = TextEditingController();
+  final TextEditingController _conConfirmPassword = TextEditingController();
   bool _isPasswordVisible = false;
 
-  bool _isPersonalDetails = false;
   bool _isEmail = false;
   bool _isPassword = false;
 
@@ -45,14 +39,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   void initState() {
     super.initState();
-    _isPersonalDetails = true;
+    _isEmail = true;
+    _init();
+  }
+
+  _init() async {
+    await _sendOTP(widget.auth.email);
   }
 
   @override
   Widget build(BuildContext context) {
     return KeyboardDismiss(
       child: PopScope(
-        canPop: (_isPersonalDetails && !_loading),
+        canPop: (_isEmail && !_loading),
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
@@ -82,24 +81,27 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   const CImage(Assets.imgDatadirrTxt,
                                       width: 100),
                                   const VSpace(space: 20),
-                                  _personalDetailsUI(),
                                   _emailUI(),
                                   _passwordUI(),
                                 ]),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: FlexWidth(
-                            child: CButton(
-                                text:
-                                    _isPassword ? Strings.finish : Strings.next,
-                                loading: _loading,
-                                onTap: () {
-                                  if (!_loading) {
-                                    _checkValidDetails();
-                                  }
-                                }),
+                        Visibility(
+                          visible: _isVerified,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: FlexWidth(
+                              child: CButton(
+                                  text: _isPassword
+                                      ? Strings.finish
+                                      : Strings.next,
+                                  loading: _loading,
+                                  onTap: () {
+                                    if (!_loading) {
+                                      _checkValidDetails();
+                                    }
+                                  }),
+                            ),
                           ),
                         )
                       ],
@@ -114,106 +116,77 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
-  _personalDetailsUI() {
-    return Visibility(
-      visible: _isPersonalDetails,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(Strings.createDatadirrAccount,
-              textAlign: TextAlign.center,
-              style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-          const VSpace(space: 5),
-          Text(Strings.enterYourNameAndMobileNumber,
-              textAlign: TextAlign.center, style: Styles.txtRegular()),
-          const VSpace(space: 30),
-          CATextField(
-            controller: _conFirstName,
-            hintText: Strings.firstName,
-          ),
-          const VSpace(),
-          CATextField(
-            controller: _conMiddleName,
-            hintText: Strings.middleNameOptional,
-          ),
-          const VSpace(),
-          CATextField(
-            controller: _conLastName,
-            hintText: Strings.lastNameSurname,
-          ),
-          const VSpace(),
-          CATextField(
-            controller: _conMobile,
-            hintText: Strings.mobileNumber,
-            inputType: TextInputType.number,
-            inputFormatters: [Validate.intValueFormatter()],
-          ),
-          const VSpace(space: 30),
-        ],
-      ),
-    );
-  }
-
   _emailUI() {
     return Visibility(
       visible: _isEmail,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(Strings.createDatadirrAccount,
+          Text(Strings.accountRecovery,
               textAlign: TextAlign.center,
               style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
           const VSpace(space: 5),
-          Text(Strings.youWillUseEmailSignInAccount,
+          Text(Strings.accountRecoveryMsg,
               textAlign: TextAlign.center, style: Styles.txtRegular()),
-          const VSpace(space: 30),
-          CATextField(
-            controller: _conEmail,
-            hintText: Strings.email,
-            enabled: (!_isOTPSent && !_loading),
-            suffixImage: _isVerified ? Assets.imgVerified : Assets.imgErrorInfo,
+          const VSpace(),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ProfileUI(
+                  value: widget.auth.name, size: 25, fontSize: Fonts.fontSmall),
+              const HSpace(),
+              Flexible(
+                child: Text(widget.auth.email,
+                    overflow: TextOverflow.ellipsis,
+                    style: Styles.txtRegular(color: Colorr.primaryBlue)),
+              ),
+            ],
           ),
-          Visibility(
-            visible: !_isVerified,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Visibility(
-                  visible: _isOTPSent,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const VSpace(),
-                      CATextField(
-                        controller: _conOTP,
-                        hintText: Strings.otp,
-                        inputType: TextInputType.number,
-                        inputFormatters: [Validate.intValueFormatter()],
-                        suffixImage: Assets.imgVerify,
-                        suffixImageTap: () {
-                          if (!_loading) {
-                            _checkValidDetailsOTP();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+          const VSpace(space: 30),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Visibility(
+                visible: _isOTPSent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const VSpace(),
+                    CATextField(
+                      controller: _conOTP,
+                      hintText: Strings.otp,
+                      inputType: TextInputType.number,
+                      inputFormatters: [Validate.intValueFormatter()],
+                      suffixImage: Assets.imgVerify,
+                      suffixImageTap: () {
+                        if (!_loading) {
+                          _checkValidDetailsOTP();
+                        }
+                      },
+                    ),
+                    const VSpace(),
+                    Text(
+                      Strings.plzCheckMail,
+                      style: Styles.txtRegular(
+                          color: Colorr.grey50, fontSize: Fonts.fontXSmall),
+                    )
+                  ],
                 ),
-                const VSpace(space: 20),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Tap(
-                        onTap: () {
-                          if (!_loading) {
-                            _checkValidDetailsOTP(send: true);
-                          }
-                        },
-                        child: Text(
-                            _isOTPSent ? Strings.resend : Strings.verify,
-                            style:
-                                Styles.txtMedium(color: Colorr.primaryBlue)))),
-              ],
-            ),
+              ),
+              const VSpace(space: 20),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Tap(
+                      onTap: () {
+                        if (!_loading) {
+                          _checkValidDetailsOTP(send: true);
+                        }
+                      },
+                      child: Text(
+                          _isOTPSent ? Strings.resendIt : Strings.verify,
+                          style: Styles.txtMedium(color: Colorr.primaryBlue)))),
+            ],
           ),
           const VSpace(space: 30),
         ],
@@ -249,6 +222,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             },
           ),
           const VSpace(),
+          CATextField(
+            controller: _conConfirmPassword,
+            hintText: Strings.confirmPassword,
+            obscureText: !_isPasswordVisible,
+            suffixImage:
+                _isPasswordVisible ? Assets.imgVisible : Assets.imgInvisible,
+            suffixImageTap: () {
+              if (mounted) {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              }
+            },
+          ),
+          const VSpace(),
           Align(
               alignment: Alignment.centerLeft,
               child: Tap(
@@ -262,168 +250,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
-  _checkValidDetails() {
-    String firstName = _conFirstName.trimText();
-    String middleName = _conMiddleName.trimText();
-    String lastName = _conLastName.trimText();
-    String mobile = _conMobile.trimText();
-    String email = _conEmail.trimText();
-    String password = _conPassword.trimText();
-    if (_isPersonalDetails) {
-      if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
-        Common.showSnackBar(Strings.plzEnterYourName);
-        return;
-      }
-      if (Utils.isNullOREmpty(mobile)) {
-        Common.showSnackBar(Strings.plzEnterMobileNumber);
-        return;
-      }
-      _continue();
-    } else if (_isEmail) {
-      if (_isVerified) {
-        if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
-          Common.showSnackBar(Strings.plzEnterYourName);
-          return;
-        }
-        if (Utils.isNullOREmpty(mobile)) {
-          Common.showSnackBar(Strings.plzEnterMobileNumber);
-          return;
-        }
-        if (Utils.isNullOREmpty(email)) {
-          Common.showSnackBar(Strings.plzEnterEmail);
-          return;
-        }
-        /*if (!Validate.isEmail(email)) {
-        Common.showSnackBar(Strings.plzEnterValidEmail);
-        return;
-      }*/
-        _continue();
-      } else {
-        Common.showSnackBar(Strings.plzVerifyYourEmail);
-        return;
-      }
-    } else if (_isPassword) {
-      if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
-        Common.showSnackBar(Strings.plzEnterYourName);
-        return;
-      }
-      if (Utils.isNullOREmpty(mobile)) {
-        Common.showSnackBar(Strings.plzEnterMobileNumber);
-        return;
-      }
-      if (Utils.isNullOREmpty(email)) {
-        Common.showSnackBar(Strings.errInvalid);
-        return;
-      }
-      /*if (!Validate.isEmail(email)) {
-        Common.showSnackBar(Strings.plzEnterValidEmail);
-        return;
-      }*/
-      if (Utils.isNullOREmpty(password)) {
-        Common.showSnackBar(Strings.plzEnterPassword);
-        return;
-      }
-      if (!Validate.isPassword(password)) {
-        Common.showSnackBar(Strings.plzEnterValidPassword);
-        return;
-      }
-      _signup(firstName, middleName, lastName, mobile, email, password);
-    }
-  }
-
-  _signInWithUniqueID(String email) async {
-    bool success = false;
-    if (mounted) {
-      setState(() {
-        _loading = true;
-      });
-    }
-    Auth? auth = await Auth.signInWithUniqueID(uniqueID: email, showErr: false);
-    if (auth == null) {
-      success = true;
-    } else {
-      Common.showSnackBar(Strings.emailAlreadyRegistered);
-    }
-    if (mounted) {
-      setState(() {
-        _loading = false;
-      });
-    }
-    return success;
-  }
-
-  _signup(String firstName, String middleName, String lastName, String mobile,
-      String email, String password) async {
-    if (mounted) {
-      setState(() {
-        _loading = true;
-      });
-    }
-    bool success = await Auth.signup(
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        mobile: mobile,
-        email: email,
-        password: password);
-    if (success) {
-      if (mounted) {
-        Navigator.pop(context);
-      }
-    }
-    if (mounted) {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _continue() async {
-    if (mounted) {
-      setState(() {
-        if (_isPersonalDetails) {
-          _isPersonalDetails = false;
-          _isEmail = true;
-          _isPassword = false;
-
-          _isOTPSent = false;
-          _isVerified = false;
-          _conEmail.clear();
-          _conOTP.clear();
-        } else if (_isEmail) {
-          _isPersonalDetails = false;
-          _isEmail = false;
-          _isPassword = true;
-
-          _isPasswordVisible = false;
-          _conPassword.clear();
-        }
-      });
-    }
-  }
-
-  _back() async {
-    if (!_loading) {
-      if (mounted) {
-        setState(() {
-          if (_isPassword) {
-            _isPersonalDetails = false;
-            _isEmail = true;
-            _isPassword = false;
-          } else {
-            if (_isEmail) {
-              _isPersonalDetails = true;
-              _isEmail = false;
-              _isPassword = false;
-            }
-          }
-        });
-      }
-    }
-  }
-
   _checkValidDetailsOTP({bool send = false}) async {
-    String email = _conEmail.trimText();
+    String email = widget.auth.email;
     String otp = _conOTP.trimText();
     if (Utils.isNullOREmpty(email)) {
       Common.showSnackBar(Strings.plzEnterEmail);
@@ -442,10 +270,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
       _verifyOTP(email, otp);
     } else {
-      bool success = await _signInWithUniqueID(email);
-      if (success) {
-        _sendOTP(email);
-      }
+      _sendOTP(email);
     }
   }
 
@@ -455,7 +280,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         _loading = true;
       });
     }
-    bool success = await Auth.sendOTPToEmail(email: email);
+    bool success = await Verification.sendOTPToEmail(email: email);
     if (success) {
       _isOTPSent = true;
     } else {
@@ -474,9 +299,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         _loading = true;
       });
     }
-    bool success = await Auth.verifyOTPByEmail(email: email, otp: otp);
+    bool success = await Verification.verifyOTPByEmail(email: email, otp: otp);
     if (success) {
       _isVerified = true;
+      _continue();
     } else {
       _isVerified = false;
     }
@@ -484,6 +310,93 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       setState(() {
         _loading = false;
       });
+    }
+  }
+
+  _checkValidDetails() {
+    String email = widget.auth.email;
+    String password = _conPassword.trimText();
+    String confirmPassword = _conConfirmPassword.trimText();
+    if (_isEmail) {
+      if (_isVerified) {
+        if (Utils.isNullOREmpty(email)) {
+          Common.showSnackBar(Strings.plzEnterEmail);
+          return;
+        }
+        if (!Validate.isEmail(email)) {
+          Common.showSnackBar(Strings.plzEnterValidEmail);
+          return;
+        }
+        _continue();
+      } else {
+        Common.showSnackBar(Strings.plzVerifyYourEmail);
+        return;
+      }
+    } else if (_isPassword) {
+      if (Utils.isNullOREmpty(email)) {
+        Common.showSnackBar(Strings.plzEnterValidEmail);
+        return;
+      }
+      if (!Validate.isEmail(email)) {
+        Common.showSnackBar(Strings.plzEnterValidEmail);
+        return;
+      }
+      if (Utils.isNullOREmpty(password)) {
+        Common.showSnackBar(Strings.plzEnterPassword);
+        return;
+      }
+      if (!Validate.isPassword(password)) {
+        Common.showSnackBar(Strings.plzEnterValidPassword);
+        return;
+      }
+      if (Utils.isNullOREmpty(confirmPassword)) {
+        Common.showSnackBar(Strings.plzEnterConfirmPassword);
+        return;
+      }
+      if (!Utils.equals(password, confirmPassword, ignoreCase: false)) {
+        Common.showSnackBar(Strings.passwordDoesNotMatch);
+        return;
+      }
+      _resetPassword(email, password);
+    }
+  }
+
+  _resetPassword(String email, String password) async {
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    bool success = await Auth.resetPassword(email: email, password: password);
+    if (success) {
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  _continue() async {
+    if (mounted) {
+      setState(() {
+        if (_isEmail) {
+          _isEmail = false;
+          _isPassword = true;
+
+          _isPasswordVisible = false;
+          _conPassword.clear();
+        }
+      });
+    }
+  }
+
+  _back() async {
+    if (!_loading) {
+      Navigator.pop(context);
     }
   }
 }

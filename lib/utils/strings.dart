@@ -69,7 +69,7 @@ class Strings {
   static const String change = "Change";
   static const String register = "Register";
   static const String verify = "Verify";
-  static const String resend = "Resend";
+  static const String resendIt = "Resend it";
   static const String plzCheckMailMsg =
       "Please check your mail inbox or spam or junk.";
 
@@ -77,18 +77,25 @@ class Strings {
   static const String createAccount = "Create account";
   static const String createDatadirrAccount = "Create a datadirr account";
   static const String createStrongPassword = "Create a strong password";
-  static const String enterYourNameAndMobileNumber = "Enter your name and mobile number";
+  static const String enterYourNameAndMobileNumber =
+      "Enter your name and mobile number";
   static const String plzEnterYourName = "please enter your name";
   static const String addAnotherAccount = "Add another account";
   static const String doNotHaveAnAccount = "Don't have an account?";
   static const String alreadyHaveAnAccount = "Already have an account!";
+  static const String accountRecovery = "Account Recovery";
+  static const String accountRecoveryMsg =
+      "To help keep your account safe, datadirr wants to make sure that it's really you trying to sign in";
   static const String signIn = "Sign in";
   static const String signOut = "Sign out";
   static const String signOutAllAccounts = "Sign out of all accounts";
   static const String withYourDatadirrAccount = "with your datadirr account";
-  static const String signInWithYourDatadirrAccount = "Sign in with your datadirr accounts";
-  static const String youWillUseEmailSignInAccount = "You'll use this email to sign in to your datadirr account";
-  static const String createStrongPasswordMsg = "Create a strong password with a mixture of letters, numbers and symbols";
+  static const String signInWithYourDatadirrAccount =
+      "Sign in with your datadirr accounts";
+  static const String youWillUseEmailSignInAccount =
+      "You'll use this email to sign in to your datadirr account";
+  static const String createStrongPasswordMsg =
+      "Create a strong password with a mixture of letters, numbers and symbols";
   static const String searchInDatadirr = "Search in datadirr";
   static const String settings = "Settings";
   static const String mobile = "Mobile";
@@ -152,7 +159,8 @@ class Strings {
   static const String sendOTP = "Send OTP";
   static const String otp = "OTP";
   static const String plzEnterOTP = "Please enter OTP";
-  static const String plzCheckMail = "Please check inbox or spam or junk mail";
+  static const String plzCheckMail =
+      "Please check inbox or spam or junk in your mailbox";
   static const String supportContact = "Support Contact";
   static const String viewer = "Viewer";
   static const String support = "Support";
@@ -173,13 +181,17 @@ class Strings {
   static const String manageYourSociety = "Manage your society";
   static const String manageNow = "Manage now";
   static const String manageSocietyOrFlat = "Manage society or flat";
-  static const String manageSocietyOrFlatMsg = "House number, name and owner details";
+  static const String manageSocietyOrFlatMsg =
+      "House number, name and owner details";
   static const String manageMembers = "Manage members";
-  static const String manageMembersMsg = "Member name, mobile, email and address";
+  static const String manageMembersMsg =
+      "Member name, mobile, email and address";
   static const String manageAmenityType = "Manage amenity type";
-  static const String manageAmenityTypeMsg = "Add, active and de-active amenity type";
+  static const String manageAmenityTypeMsg =
+      "Add, active and de-active amenity type";
   static const String manageVisitors = "Manage Visitors";
-  static const String manageVisitorMsg = "Visitor details and inform to meet person";
+  static const String manageVisitorMsg =
+      "Visitor details and inform to meet person";
   static const String type = "Type";
   static const String wingName = "Wing Name";
   static const String details = "Details";

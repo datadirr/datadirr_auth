@@ -51,8 +51,7 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     const VSpace(space: 20),
-                                    const CImage(
-                                        Assets.imgDatadirrTxt,
+                                    const CImage(Assets.imgDatadirrTxt,
                                         width: 100),
                                     const VSpace(),
                                     Text(Strings.signInWithYourDatadirrAccount,

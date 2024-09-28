@@ -27,6 +27,7 @@ class Api {
   static const String fSignUp = 'signup';
   static const String fSendOTPToEmail = 'sendOTPToEmail';
   static const String fVerifyOTPByEmail = 'verifyOTPByEmail';
+  static const String fResetPassword = 'resetPassword';
   static const String fSignInWithUniqueID = 'signInWithUniqueID';
   static const String fSignIn = 'signIn';
   static const String fSignOut = 'signOut';

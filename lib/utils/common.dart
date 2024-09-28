@@ -34,7 +34,7 @@ class Common {
     } else if (Platform.isIOS) {
       return ((await DeviceInfoPlugin().iosInfo).identifierForVendor) ?? "";
     } else if (Platform.isWindows) {
-      return ((await DeviceInfoPlugin().windowsInfo).deviceId) ?? "";
+      return ((await DeviceInfoPlugin().windowsInfo).deviceId);
     } else {
       return "";
     }

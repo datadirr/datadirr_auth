@@ -1,4 +1,5 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/auth/verification.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/common.dart';
@@ -181,6 +182,7 @@ class _SignUpState extends State<SignUp> {
                   visible: _isOTPSent,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const VSpace(),
                       CATextField(
@@ -195,6 +197,12 @@ class _SignUpState extends State<SignUp> {
                           }
                         },
                       ),
+                      const VSpace(),
+                      Text(
+                        Strings.plzCheckMail,
+                        style: Styles.txtRegular(
+                            color: Colorr.grey50, fontSize: Fonts.fontXSmall),
+                      )
                     ],
                   ),
                 ),
@@ -208,7 +216,7 @@ class _SignUpState extends State<SignUp> {
                           }
                         },
                         child: Text(
-                            _isOTPSent ? Strings.resend : Strings.verify,
+                            _isOTPSent ? Strings.resendIt : Strings.verify,
                             style:
                                 Styles.txtMedium(color: Colorr.primaryBlue)))),
               ],
@@ -309,7 +317,7 @@ class _SignUpState extends State<SignUp> {
         _loading = true;
       });
     }
-    bool success = await Auth.sendOTPToEmail(email: email);
+    bool success = await Verification.sendOTPToEmail(email: email);
     if (success) {
       _isOTPSent = true;
     } else {
@@ -328,7 +336,7 @@ class _SignUpState extends State<SignUp> {
         _loading = true;
       });
     }
-    bool success = await Auth.verifyOTPByEmail(email: email, otp: otp);
+    bool success = await Verification.verifyOTPByEmail(email: email, otp: otp);
     if (success) {
       _isVerified = true;
     } else {
@@ -498,12 +506,10 @@ class _SignUpState extends State<SignUp> {
             _isPersonalDetails = false;
             _isEmail = true;
             _isPassword = false;
-          } else {
-            if (_isEmail) {
-              _isPersonalDetails = true;
-              _isEmail = false;
-              _isPassword = false;
-            }
+          } else if (_isEmail) {
+            _isPersonalDetails = true;
+            _isEmail = false;
+            _isPassword = false;
           }
         });
       }
