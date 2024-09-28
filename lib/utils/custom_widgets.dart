@@ -74,14 +74,18 @@ class Tap extends StatelessWidget {
 }
 
 class CProgress extends StatelessWidget {
+  final double? size;
   final Color? color;
 
-  const CProgress({super.key, this.color});
+  const CProgress({super.key, this.size, this.color});
 
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: CircularProgressIndicator(color: color ?? Colorr.primary));
+        child: SizedBox(
+            width: size,
+            height: size,
+            child: CircularProgressIndicator(color: color ?? Colorr.primary)));
   }
 }
 

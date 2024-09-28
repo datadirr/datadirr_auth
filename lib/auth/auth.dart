@@ -178,8 +178,6 @@ class Auth {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
           auths = Auth.fromJsonToList(Api.result(res)["auths"]);
-        } else {
-          Common.showSnackBar(Api.message(res));
         }
       }
     } catch (_) {

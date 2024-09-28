@@ -1,4 +1,4 @@
-import 'package:datadirr_auth/auth/sign_in.dart';
+import 'package:datadirr_auth/auth/datadirr_sign_in.dart';
 import 'package:datadirr_auth/datadirr_auth.dart';
 import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignIn(onSuccess: (context, auth) {
+      home: DatadirrSignIn(onSuccess: (context, auth) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => Dashboard(auth: auth)));
       }),

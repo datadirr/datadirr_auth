@@ -24,4 +24,5 @@ class Assets {
   static const IconData icArrowDownward = Icons.keyboard_arrow_down_rounded;
   static const IconData icAdd = Icons.add_rounded;
   static const IconData icSignOut = Icons.logout_rounded;
+  static const IconData icSystemUpdate = Icons.system_update_alt_rounded;
 }
