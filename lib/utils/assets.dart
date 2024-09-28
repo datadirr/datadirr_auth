@@ -15,6 +15,9 @@ class Assets {
   static const String imgNoData = "${rootImages}img_no_data.png";
   static const String imgVisible = "${rootImages}img_visible.png";
   static const String imgInvisible = "${rootImages}img_invisible.png";
+  static const String imgVerified = "${rootImages}img_verified.png";
+  static const String imgVerify = "${rootImages}img_verify.png";
+  static const String imgErrorInfo = "${rootImages}img_error_info.png";
   static const String imgSearch = "${rootImages}img_search.png";
 
   static const IconData icAddAccount = Icons.person_add_outlined;

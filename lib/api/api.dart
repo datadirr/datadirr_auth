@@ -21,9 +21,12 @@ class Api {
 
   // systemClass
   static const String cAuth = 'Auth';
+  static const String cVerification = 'Verification';
 
   // systemFunction
   static const String fSignUp = 'signup';
+  static const String fSendOTPToEmail = 'sendOTPToEmail';
+  static const String fVerifyOTPByEmail = 'verifyOTPByEmail';
   static const String fSignInWithUniqueID = 'signInWithUniqueID';
   static const String fSignIn = 'signIn';
   static const String fSignOut = 'signOut';

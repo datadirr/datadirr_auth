@@ -52,7 +52,7 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
                                   children: [
                                     const VSpace(space: 20),
                                     const CImage(
-                                        assetName: Assets.imgDatadirrTxt,
+                                        Assets.imgDatadirrTxt,
                                         width: 100),
                                     const VSpace(),
                                     Text(Strings.signInWithYourDatadirrAccount,

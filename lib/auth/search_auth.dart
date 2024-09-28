@@ -45,7 +45,7 @@ class _SearchAuthState extends State<SearchAuth> {
           padding: const EdgeInsets.all(20),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             const VSpace(space: 20),
-            const CImage(assetName: Assets.imgDatadirrTxt, width: 100),
+            const CImage(Assets.imgDatadirrTxt, width: 100),
             const VSpace(),
             Text(Strings.searchInDatadirr,
                 textAlign: TextAlign.center, style: Styles.txtRegular()),

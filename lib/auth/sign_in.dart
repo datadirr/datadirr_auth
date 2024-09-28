@@ -78,8 +78,7 @@ class _SignInState extends State<SignIn> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const VSpace(space: 20),
-                                  const CImage(
-                                      assetName: Assets.imgDatadirrTxt,
+                                  const CImage(Assets.imgDatadirrTxt,
                                       width: 100),
                                   const VSpace(space: 20),
                                   _emailUI(),
@@ -91,7 +90,8 @@ class _SignInState extends State<SignIn> {
                           alignment: Alignment.centerRight,
                           child: FlexWidth(
                             child: CButton(
-                                text: Strings.next,
+                                text:
+                                    _isPassword ? Strings.finish : Strings.next,
                                 loading: _loading,
                                 onTap: () {
                                   if (!_loading) {
@@ -278,8 +278,8 @@ class _SignInState extends State<SignIn> {
           _isEmail = false;
           _isPassword = true;
 
-          _conPassword.clear();
           _isPasswordVisible = false;
+          _conPassword.clear();
         }
       });
     }

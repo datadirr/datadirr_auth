@@ -741,10 +741,7 @@ class CAField extends StatelessWidget {
                                 prefixImageTap!();
                               }
                             },
-                            child: Image.asset(prefixImage!,
-                                width: 20,
-                                height: 20,
-                                package: Plugin.package)),
+                            child: CImage(prefixImage!, width: 20, height: 20)),
                         const HSpace()
                       ],
                     ),
@@ -759,10 +756,7 @@ class CAField extends StatelessWidget {
                                 suffixImageTap!();
                               }
                             },
-                            child: Image.asset(suffixImage!,
-                                width: 20,
-                                height: 20,
-                                package: Plugin.package)),
+                            child: CImage(suffixImage!, width: 20, height: 20)),
                       ],
                     )
                 ],
@@ -1039,7 +1033,7 @@ class CImage extends StatelessWidget {
   final double? width;
   final double? height;
 
-  const CImage({super.key, required this.assetName, this.width, this.height});
+  const CImage(this.assetName, {super.key, this.width, this.height});
 
   @override
   Widget build(BuildContext context) {

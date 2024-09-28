@@ -22,11 +22,15 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool _loading = false;
-  final TextEditingController _conFirstName = TextEditingController();
+  final TextEditingController _conFirstName =
+      TextEditingController(text: "Rohan");
   final TextEditingController _conMiddleName = TextEditingController();
-  final TextEditingController _conLastName = TextEditingController();
-  final TextEditingController _conMobile = TextEditingController();
+  final TextEditingController _conLastName =
+      TextEditingController(text: "Patel");
+  final TextEditingController _conMobile =
+      TextEditingController(text: "9876543210");
   final TextEditingController _conEmail = TextEditingController();
+  final TextEditingController _conOTP = TextEditingController();
   final TextEditingController _conPassword = TextEditingController();
   bool _isPasswordVisible = false;
 
@@ -34,6 +38,7 @@ class _SignUpState extends State<SignUp> {
   bool _isEmail = false;
   bool _isPassword = false;
 
+  bool _isOTPSent = false;
   bool _isVerified = false;
 
   @override
@@ -73,8 +78,7 @@ class _SignUpState extends State<SignUp> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const VSpace(space: 20),
-                                  const CImage(
-                                      assetName: Assets.imgDatadirrTxt,
+                                  const CImage(Assets.imgDatadirrTxt,
                                       width: 100),
                                   const VSpace(space: 20),
                                   _personalDetailsUI(),
@@ -87,7 +91,8 @@ class _SignUpState extends State<SignUp> {
                           alignment: Alignment.centerRight,
                           child: FlexWidth(
                             child: CButton(
-                                text: Strings.next,
+                                text:
+                                    _isPassword ? Strings.finish : Strings.next,
                                 loading: _loading,
                                 onTap: () {
                                   if (!_loading) {
@@ -164,18 +169,51 @@ class _SignUpState extends State<SignUp> {
           CATextField(
             controller: _conEmail,
             hintText: Strings.email,
+            enabled: (!_isOTPSent && !_loading),
+            suffixImage: _isVerified ? Assets.imgVerified : Assets.imgErrorInfo,
           ),
-          const VSpace(space: 20),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Tap(
-                  onTap: () {
-                    if (!_loading) {
-
-                    }
-                  },
-                  child: Text(Strings.verify,
-                      style: Styles.txtMedium(color: Colorr.primaryBlue)))),
+          Visibility(
+            visible: !_isVerified,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Visibility(
+                  visible: _isOTPSent,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const VSpace(),
+                      CATextField(
+                        controller: _conOTP,
+                        hintText: Strings.otp,
+                        inputType: TextInputType.number,
+                        inputFormatters: [Validate.intValueFormatter()],
+                        suffixImage: Assets.imgVerify,
+                        suffixImageTap: () {
+                          if (!_loading) {
+                            _checkValidDetailsOTP();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const VSpace(space: 20),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Tap(
+                        onTap: () {
+                          if (!_loading) {
+                            _checkValidDetailsOTP(send: true);
+                          }
+                        },
+                        child: Text(
+                            _isOTPSent ? Strings.resend : Strings.verify,
+                            style:
+                                Styles.txtMedium(color: Colorr.primaryBlue)))),
+              ],
+            ),
+          ),
           const VSpace(space: 30),
         ],
       ),
@@ -241,23 +279,28 @@ class _SignUpState extends State<SignUp> {
       }
       _continue();
     } else if (_isEmail) {
-      if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
-        Common.showSnackBar(Strings.plzEnterYourName);
-        return;
-      }
-      if (Utils.isNullOREmpty(mobile)) {
-        Common.showSnackBar(Strings.plzEnterMobileNumber);
-        return;
-      }
-      if (Utils.isNullOREmpty(email)) {
-        Common.showSnackBar(Strings.plzEnterEmail);
-        return;
-      }
-      /*if (!Validate.isEmail(email)) {
+      if (_isVerified) {
+        if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
+          Common.showSnackBar(Strings.plzEnterYourName);
+          return;
+        }
+        if (Utils.isNullOREmpty(mobile)) {
+          Common.showSnackBar(Strings.plzEnterMobileNumber);
+          return;
+        }
+        if (Utils.isNullOREmpty(email)) {
+          Common.showSnackBar(Strings.plzEnterEmail);
+          return;
+        }
+        /*if (!Validate.isEmail(email)) {
         Common.showSnackBar(Strings.plzEnterValidEmail);
         return;
       }*/
-      _signInWithUniqueID(email);
+        _continue();
+      } else {
+        Common.showSnackBar(Strings.plzVerifyYourEmail);
+        return;
+      }
     } else if (_isPassword) {
       if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
         Common.showSnackBar(Strings.plzEnterYourName);
@@ -288,6 +331,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   _signInWithUniqueID(String email) async {
+    bool success = false;
     if (mounted) {
       setState(() {
         _loading = true;
@@ -295,7 +339,7 @@ class _SignUpState extends State<SignUp> {
     }
     Auth? auth = await Auth.signInWithUniqueID(uniqueID: email, showErr: false);
     if (auth == null) {
-      _continue();
+      success = true;
     } else {
       Common.showSnackBar(Strings.emailAlreadyRegistered);
     }
@@ -304,6 +348,7 @@ class _SignUpState extends State<SignUp> {
         _loading = false;
       });
     }
+    return success;
   }
 
   _signup(String firstName, String middleName, String lastName, String mobile,
@@ -340,15 +385,17 @@ class _SignUpState extends State<SignUp> {
           _isEmail = true;
           _isPassword = false;
 
-          _conEmail.clear();
+          _isOTPSent = false;
           _isVerified = false;
+          _conEmail.clear();
+          _conOTP.clear();
         } else if (_isEmail) {
           _isPersonalDetails = false;
           _isEmail = false;
           _isPassword = true;
 
-          _conPassword.clear();
           _isPasswordVisible = false;
+          _conPassword.clear();
         }
       });
     }
@@ -371,6 +418,71 @@ class _SignUpState extends State<SignUp> {
           }
         });
       }
+    }
+  }
+
+  _checkValidDetailsOTP({bool send = false}) async {
+    String email = _conEmail.trimText();
+    String otp = _conOTP.trimText();
+    if (Utils.isNullOREmpty(email)) {
+      Common.showSnackBar(Strings.plzEnterEmail);
+      return;
+    }
+    if (!Validate.isEmail(email)) {
+      Common.showSnackBar(Strings.plzEnterValidEmail);
+      return;
+    }
+
+    if (_isOTPSent && !send) {
+      if (Utils.isNullOREmpty(otp)) {
+        Common.showSnackBar(Strings.plzEnterOTP);
+        return;
+      }
+
+      _verifyOTP(email, otp);
+    } else {
+      bool success = await _signInWithUniqueID(email);
+      if (success) {
+        _sendOTP(email);
+      }
+    }
+  }
+
+  _sendOTP(email) async {
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    bool success = await Auth.sendOTPToEmail(email: email);
+    if (success) {
+      _isOTPSent = true;
+    } else {
+      _isOTPSent = false;
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  _verifyOTP(email, otp) async {
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    bool success = await Auth.verifyOTPByEmail(email: email, otp: otp);
+    if (success) {
+      _isVerified = true;
+    } else {
+      _isVerified = false;
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 }

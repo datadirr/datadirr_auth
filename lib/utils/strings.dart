@@ -40,6 +40,7 @@ class Strings {
   static const String locationNotFound = "Location not found!";
   static const String plzWait = "Please wait...";
   static const String close = "Close";
+  static const String finish = "Finish";
   static const String next = "Next";
   static const String save = "Save";
   static const String submit = "Submit";
@@ -61,13 +62,14 @@ class Strings {
       "File more than 2 MB, Please select another file";
   static const String fillYourInformation = "Fill your information.";
   static const String plzLoginToContinue = "Please login to continue.";
-  static const String plzVerifyYourEmail = "Please verify your email.";
+  static const String plzVerifyYourEmail = "Please verify your email";
   static const String resetYourPassword = "Reset your password";
   static const String resetMPINQ = "Reset mPIN ?";
   static const String changePassword = "Change Password";
   static const String change = "Change";
   static const String register = "Register";
   static const String verify = "Verify";
+  static const String resend = "Resend";
   static const String plzCheckMailMsg =
       "Please check your mail inbox or spam or junk.";
 
