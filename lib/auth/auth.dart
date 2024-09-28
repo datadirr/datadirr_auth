@@ -71,6 +71,25 @@ class Auth {
     return auth;
   }
 
+  static Future<bool> sendOTPToEmail({required String uniqueID}) async {
+    bool success = false;
+    var body = {"uniqueID": Convert.stringToBase64(uniqueID)};
+    dynamic res = await Api.request(
+        cName: Api.cAuth, fName: Api.fSignInWithUniqueID, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
+  }
+
   static Future<bool> signup(
       {required String firstName,
       required String middleName,

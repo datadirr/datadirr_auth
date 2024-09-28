@@ -34,6 +34,8 @@ class _SignUpState extends State<SignUp> {
   bool _isEmail = false;
   bool _isPassword = false;
 
+  bool _isVerified = false;
+
   @override
   void initState() {
     super.initState();
@@ -167,7 +169,11 @@ class _SignUpState extends State<SignUp> {
           Align(
               alignment: Alignment.centerLeft,
               child: Tap(
-                  onTap: () {},
+                  onTap: () {
+                    if (!_loading) {
+
+                    }
+                  },
                   child: Text(Strings.verify,
                       style: Styles.txtMedium(color: Colorr.primaryBlue)))),
           const VSpace(space: 30),
@@ -335,6 +341,7 @@ class _SignUpState extends State<SignUp> {
           _isPassword = false;
 
           _conEmail.clear();
+          _isVerified = false;
         } else if (_isEmail) {
           _isPersonalDetails = false;
           _isEmail = false;
