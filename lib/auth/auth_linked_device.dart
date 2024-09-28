@@ -1,5 +1,5 @@
 import 'package:datadirr_auth/auth/auth.dart';
-import 'package:datadirr_auth/auth/sign_in_screen.dart';
+import 'package:datadirr_auth/auth/sign_in.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/custom_widgets.dart';
@@ -37,14 +37,14 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
     return Touch(
       disable: _loading,
       child: _addAccount
-          ? SignInScreen(onSuccess: widget.onSuccess)
+          ? SignIn(onSuccess: widget.onSuccess)
           : Scaffold(
-              backgroundColor: Colorr.grey10,
+              backgroundColor: Colorr.white,
               body: SafeArea(
                   child: _loading
                       ? const Progress()
                       : _auths.isEmpty
-                          ? SignInScreen(onSuccess: widget.onSuccess)
+                          ? SignIn(onSuccess: widget.onSuccess)
                           : Padding(
                               padding: const EdgeInsets.all(20),
                               child: Column(
@@ -55,14 +55,17 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
                                         assetName: Assets.imgDatadirrTxt,
                                         width: 100),
                                     const VSpace(),
-                                    Text(Strings.signInAuthMsg,
+                                    Text(Strings.signInWithYourDatadirrAccount,
                                         textAlign: TextAlign.center,
                                         style: Styles.txtRegular()),
                                     const VSpace(space: 30),
                                     Flexible(
                                       child: Container(
                                         decoration: Styles.boxDecoration(
-                                            radius: 30, color: Colorr.white),
+                                            radius: 30,
+                                            color: Colorr.white,
+                                            blur: 10,
+                                            blurColor: Colorr.grey20),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
@@ -84,9 +87,11 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
                                             const CDivider(),
                                             Tap(
                                               onTap: () {
-                                                setState(() {
-                                                  _addAccount = true;
-                                                });
+                                                if (mounted) {
+                                                  setState(() {
+                                                    _addAccount = true;
+                                                  });
+                                                }
                                               },
                                               child: Padding(
                                                 padding:
@@ -188,7 +193,7 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
             SizedBox(
               width: 40,
               child: ProfileUI(
-                value: auth.firstName,
+                value: auth.name,
                 size: 40,
                 radius: 30,
               ),
@@ -199,7 +204,7 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${auth.firstName} ${auth.lastName}",
+                  Text(auth.name,
                       overflow: TextOverflow.ellipsis,
                       style: Styles.txtMedium()),
                   Text(
@@ -218,26 +223,34 @@ class _AuthLinkedDeviceState extends State<AuthLinkedDevice> {
   }
 
   _getAuths() async {
-    setState(() {
-      _loading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
     _auths = await Auth.authLinkedByDevice();
-    setState(() {
-      _loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   _signOutAll() async {
-    setState(() {
-      _loading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
     bool success = await Auth.signOutAll();
     if (success) {
       _getAuths();
     } else {
-      setState(() {
-        _loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
     }
   }
 }

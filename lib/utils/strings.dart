@@ -73,17 +73,30 @@ class Strings {
 
   static String otpSentToEmail(String email) => "OTP sent to $email";
   static const String createAccount = "Create account";
+  static const String createDatadirrAccount = "Create a datadirr account";
+  static const String createStrongPassword = "Create a strong password";
+  static const String enterYourNameAndMobileNumber = "Enter your name and mobile number";
+  static const String plzEnterYourName = "please enter your name";
   static const String addAnotherAccount = "Add another account";
   static const String doNotHaveAnAccount = "Don't have an account?";
   static const String alreadyHaveAnAccount = "Already have an account!";
   static const String signIn = "Sign in";
   static const String signOut = "Sign out";
   static const String signOutAllAccounts = "Sign out of all accounts";
-  static const String signInMsg = "with your datadirr account.";
-  static const String signInAuthMsg = "Sign in with your datadirr accounts.";
+  static const String withYourDatadirrAccount = "with your datadirr account";
+  static const String signInWithYourDatadirrAccount = "Sign in with your datadirr accounts";
+  static const String youWillUseEmailSignInAccount = "You'll use this email to sign in to your datadirr account";
+  static const String createStrongPasswordMsg = "Create a strong password with a mixture of letters, numbers and symbols";
+  static const String searchInDatadirr = "Search in datadirr";
   static const String settings = "Settings";
   static const String mobile = "Mobile";
+  static const String mobileNumber = "Mobile number";
   static const String email = "Email";
+  static const String firstName = "First name";
+  static const String middleName = "Middle name";
+  static const String middleNameOptional = "Middle name (optional)";
+  static const String lastName = "Last name";
+  static const String lastNameSurname = "Last name (Surname)";
   static const String website = "Website";
   static const String websiteHint = "www.datadirr.com";
   static const String whatsapp = "WhatsApp";
@@ -93,7 +106,9 @@ class Strings {
   static const String mobileNumber10Digits = "Mobile number (10 digits)";
   static const String whatsappNumber10Digits = "WhatsApp number (10 digits)";
   static const String searchHere = "Search here...";
+  static const String searchEmail = "Search email";
   static const String userNotFound = "User not found";
+  static const String emailAlreadyRegistered = "Email already registered";
   static const String username = "Username";
   static const String userKey = "User Key";
   static const String usernameValidMsg =
@@ -109,7 +124,6 @@ class Strings {
   static const String plzEnterName = "Please enter name";
   static const String plzEnterSocietyKey = "Please enter society key";
   static const String plzEnterUniqueID = "Please enter unique ID";
-  static const String plzEnterYourName = "Please enter your name";
   static const String plzEnterEmailOrMobileOrUsername =
       "Please enter email or mobile or username";
   static const String plzEnterEmail = "Please enter email";
@@ -124,8 +138,9 @@ class Strings {
   static const String plzEnterValidWhatsappNumber =
       "Please enter valid whatsapp number";
   static const String plzEnterPassword = "Please enter password";
+  static const String plzEnterValidPassword = "Please enter valid password";
   static const String passwordValidMsg =
-      "Min 6 and Max 12 characters\nAt least one uppercase character\nAt least one lowercase character\nAt least one number\nAt least one special character [@#\u0024!%?]";
+      "Password must have\n  - Min 6 and Max 12 characters\n  - At least one uppercase character\n  - At least one lowercase character\n  - At least one number\n  - At least one special character [@#\u0024!%?]";
   static const String passwordDoesNotMatch =
       "Password and Confirm Password does not match";
   static const String currency = "Currency";

@@ -11,6 +11,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_widget_function/function/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Common {
   Common._();
@@ -46,16 +47,18 @@ class Common {
   }
 
   static showSnackBar(String message, {bool error = true}) {
-    Future.delayed(Duration.zero, () {
-      if (kScaffoldMessengerKey.currentState != null) {
-        kScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+    Fluttertoast.showToast(msg: message);
+    /*Future.delayed(Duration.zero, () {
+      if (kGlobalKey.currentState != null) {
+
+        kGlobalKey.currentState?.showSnackBar(SnackBar(
             behavior: SnackBarBehavior.floating,
             showCloseIcon: true,
             content:
                 Text(message, style: Styles.txtRegular(color: Colorr.white)),
             duration: const Duration(seconds: 2)));
       }
-    });
+    });*/
   }
 
   static Future<bool> isNetworkConnected() async {

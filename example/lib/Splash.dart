@@ -1,6 +1,4 @@
 import 'package:datadirr_auth/auth/auth.dart';
-import 'package:datadirr_auth/auth/sign_in_screen.dart';
-import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class Splash extends StatefulWidget {

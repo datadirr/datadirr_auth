@@ -30,15 +30,16 @@ class Api {
   static const String fSignOutAll = 'signOutAll';
   static const String fSignAuth = 'signAuth';
   static const String fAuthLinkedByDevice = 'authLinkedByDevice';
+  static const String fAuthDataByUniqueID = 'authDataByUniqueID';
 
   //body params
-  static const String bIsDetails = 'isDetails';
+  static const String bUniqueID = 'uniqueID';
+  static const String bAuthID = 'authID';
 
   static Future<dynamic> request(
       {required String cName,
       required String fName,
       Map<String, String>? body,
-      String token = "",
       bool isMultipartRequest = false,
       String fileDataParam = 'File'}) async {
     bool isNetwork = await Common.isNetworkConnected();
@@ -93,13 +94,13 @@ class Api {
     } else {
       try {
         Map<String, String> headers = {
-          'AppID': DatadirrAuth.appID,
-          'AccessKey': DatadirrAuth.accessKey,
+          'AppID': DatadirrAuth.datadirrInit.appID,
+          'AccessKey': DatadirrAuth.datadirrInit.accessKey,
           'Platform': Platform.operatingSystem,
-          'DeviceId': DatadirrAuth.deviceId,
+          'DeviceId': DatadirrAuth.datadirrInit.deviceId,
           'Class': cName,
           'Function': fName,
-          'Authorization': token
+          'Authorization': DatadirrAuth.datadirrSetup.token
         };
 
         Common.logView(headers);

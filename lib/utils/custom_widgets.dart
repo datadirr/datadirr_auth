@@ -9,10 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_plus/dropdown_item.dart';
 import 'package:flutter_widget_function/function/utils.dart';
 
-final GlobalKey<NavigatorState> kNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<ScaffoldMessengerState> kScaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
-
 class VSpace extends StatelessWidget {
   final double? space;
   final Widget? child;
@@ -282,6 +278,7 @@ class CATextField extends StatelessWidget {
   final String? tabText;
   final Color? tabTextColor;
   final Color? tabBGColor;
+  final double? radius;
   final int? minLines;
   final int? maxLines;
   final int? maxLength;
@@ -292,6 +289,7 @@ class CATextField extends StatelessWidget {
   final bool enabled;
   final Function()? onTap;
   final Function(String value)? onChanged;
+  final Function(String value)? onSubmit;
   final Function(String? value)? onSaved;
   final bool capitalize;
   final TextInputAction textInputAction;
@@ -311,6 +309,7 @@ class CATextField extends StatelessWidget {
       this.tabText,
       this.tabTextColor,
       this.tabBGColor,
+      this.radius,
       this.minLines,
       this.maxLines = 1,
       this.maxLength,
@@ -321,6 +320,7 @@ class CATextField extends StatelessWidget {
       this.enabled = true,
       this.onTap,
       this.onChanged,
+      this.onSubmit,
       this.onSaved,
       this.capitalize = false,
       this.textInputAction = TextInputAction.done,
@@ -339,6 +339,7 @@ class CATextField extends StatelessWidget {
         tabText: tabText,
         tabTextColor: tabTextColor,
         tabBGColor: tabBGColor,
+        radius: radius,
         prefixImage: prefixImage,
         prefixImageTap: prefixImageTap,
         suffixImage: suffixImage,
@@ -357,6 +358,11 @@ class CATextField extends StatelessWidget {
           onSaved: (value) {
             if (onSaved != null) {
               onSaved!(value);
+            }
+          },
+          onFieldSubmitted: (value) {
+            if (onSubmit != null) {
+              onSubmit!(value);
             }
           },
           textCapitalization: capitalize
@@ -631,6 +637,7 @@ class CAField extends StatelessWidget {
   final String? tabText;
   final Color? tabTextColor;
   final Color? tabBGColor;
+  final double? radius;
   final Function()? onTap;
   final Function()? onTabTap;
   final bool mandate;
@@ -647,6 +654,7 @@ class CAField extends StatelessWidget {
       this.tabText,
       this.tabTextColor,
       this.tabBGColor,
+      this.radius,
       this.onTap,
       this.onTabTap,
       this.mandate = false,
@@ -707,7 +715,8 @@ class CAField extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               decoration: Styles.boxDecoration(
                   borderColor: hasTextField ? Colorr.grey10 : Colorr.grey10,
-                  color: hasTextField ? Colorr.grey10 : Colorr.grey10),
+                  color: hasTextField ? Colorr.grey10 : Colorr.grey10,
+                  radius: radius),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1019,8 +1028,7 @@ class CImage extends StatelessWidget {
   final double? width;
   final double? height;
 
-  const CImage(
-      {super.key, required this.assetName, this.width, this.height});
+  const CImage({super.key, required this.assetName, this.width, this.height});
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:datadirr_auth/api/api.dart';
+import 'package:datadirr_auth/datadirr_auth.dart';
 import 'package:datadirr_auth/utils/common.dart';
 import 'package:datadirr_auth/utils/convert.dart';
 import 'package:datadirr_auth/utils/strings.dart';
@@ -10,6 +11,8 @@ class Auth {
   String username;
   String email;
   String mobile;
+  String name;
+  String fullName;
   String firstName;
   String middleName;
   String lastName;
@@ -21,6 +24,8 @@ class Auth {
       this.username = "",
       this.email = "",
       this.mobile = "",
+      this.name = "",
+      this.fullName = "",
       this.firstName = "",
       this.middleName = "",
       this.lastName = ""});
@@ -33,6 +38,8 @@ class Auth {
         username: json['username'] ?? "",
         email: json['email'] ?? "",
         mobile: json['mobile'] ?? "",
+        name: json['name'] ?? "",
+        fullName: json['fullName'] ?? "",
         firstName: json['firstName'] ?? "",
         middleName: json['middleName'] ?? "",
         lastName: json['lastName'] ?? "");
@@ -42,8 +49,9 @@ class Auth {
     return (list ?? []).map<Auth>((json) => Auth.fromJson(json)).toList();
   }
 
-  static Future<Auth> signInWithUniqueID({required String uniqueID}) async {
-    Auth auth = Auth();
+  static Future<Auth?> signInWithUniqueID(
+      {required String uniqueID, bool showErr = true}) async {
+    Auth? auth;
     var body = {"uniqueID": Convert.stringToBase64(uniqueID)};
     dynamic res = await Api.request(
         cName: Api.cAuth, fName: Api.fSignInWithUniqueID, body: body);
@@ -52,13 +60,48 @@ class Auth {
         if (Api.resultOk(res)) {
           auth = Auth.fromJson(Api.result(res)["auth"]);
         } else {
-          Common.showSnackBar(Api.message(res));
+          if (showErr) {
+            Common.showSnackBar(Api.message(res));
+          }
         }
       }
     } catch (_) {
       Common.showSnackBar(Strings.errDataParse);
     }
     return auth;
+  }
+
+  static Future<bool> signup(
+      {required String firstName,
+      required String middleName,
+      required String lastName,
+      required String mobile,
+      required String email,
+      required String password}) async {
+    bool success = false;
+    var body = {
+      "firstName": firstName,
+      "middleName": middleName,
+      "lastName": lastName,
+      "mobile": mobile,
+      "email": Convert.stringToBase64(email),
+      "password": Convert.stringToBase64(password)
+    };
+    dynamic res =
+        await Api.request(cName: Api.cAuth, fName: Api.fSignUp, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          Common.showSnackBar(Api.message(res));
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
   }
 
   static Future<Auth?> signIn(
@@ -74,6 +117,7 @@ class Auth {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
           auth = Auth.fromJson(Api.result(res)["auth"]);
+          DatadirrAuth.setup(token: auth.token);
         } else {
           Common.showSnackBar(Api.message(res));
         }
@@ -84,14 +128,14 @@ class Auth {
     return auth;
   }
 
-  static Future<Auth> signAuth({required String token}) async {
+  static Future<Auth> signAuth() async {
     Auth auth = Auth();
-    dynamic res =
-        await Api.request(cName: Api.cAuth, fName: Api.fSignAuth, token: token);
+    dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
           auth = Auth.fromJson(Api.result(res)["auth"]);
+          DatadirrAuth.setup(token: auth.token);
         } else {
           Common.showSnackBar(Api.message(res));
         }
@@ -120,10 +164,28 @@ class Auth {
     return auths;
   }
 
-  static Future<bool> signOut({required String token}) async {
+  static Future<List<Auth>> searchAuth(String uniqueID) async {
+    List<Auth> auths = [];
+    var body = {Api.bUniqueID: Convert.stringToBase64(uniqueID)};
+    dynamic res = await Api.request(
+        cName: Api.cAuth, fName: Api.fAuthDataByUniqueID, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          auths = Auth.fromJsonToList(Api.result(res)["auths"]);
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return auths;
+  }
+
+  static Future<bool> signOut() async {
     bool success = false;
-    dynamic res =
-        await Api.request(cName: Api.cAuth, fName: Api.fSignOut, token: token);
+    dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignOut);
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
