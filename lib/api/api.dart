@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:datadirr_auth/auth/auth.dart';
 import 'package:datadirr_auth/utils/common.dart';
-import 'package:datadirr_auth/utils/db.dart';
 import 'package:datadirr_auth/utils/plugin.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:http/http.dart' as http;
@@ -51,10 +51,8 @@ class Api {
       Common.showSnackBar(Strings.noInternet);
       return null;
     }
-    String packageName = await Common.getPackageName();
-    String? deviceId = await Common.getDeviceId();
-    String? accessKey = await DB.db.getString(DB.kAccessKey);
-    String? token = await DB.db.getString(DB.kToken);
+
+    String token = (await Auth.currentAuthToken()) ?? "";
     if (isMultipartRequest) {
       /*String baseUrl = "${App.serverUrl}${Constants.apiPath}$call/${App.sessions.payCode}/${App.sessions.databaseName}";
         Map<String, String> headers = {
@@ -102,13 +100,13 @@ class Api {
     } else {
       try {
         Map<String, String> headers = {
-          'AppID': packageName,
-          'AccessKey': accessKey ?? "",
+          'AppID': Plugin.packageName,
+          'AccessKey': Plugin.accessKey,
           'Platform': Platform.operatingSystem,
-          'DeviceId': deviceId ?? "",
+          'DeviceId': Plugin.deviceId,
           'Class': cName,
           'Function': fName,
-          'Authorization': token ?? ""
+          'Authorization': token
         };
 
         Common.logView(headers);

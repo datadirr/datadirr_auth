@@ -1,4 +1,6 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/auth/datadirr_sign_in.dart';
+import 'package:datadirr_auth_example/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class Splash extends StatefulWidget {
@@ -12,19 +14,8 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    _init();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      /*Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SignInScreen(
-                  deviceId: "1200",
-                  onSuccess: (context, token) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Dashboard(token: token)));
-                  })));*/
+      _init();
     });
   }
 
@@ -36,6 +27,25 @@ class _SplashState extends State<Splash> {
   }
 
   _init() async {
-    List<Auth> list = await Auth.authLinkedByDevice();
+    Auth? auth = await Auth.currentAuth();
+    if (mounted) {
+      if (auth != null) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard(auth: auth)),
+            (route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DatadirrSignIn(
+                    onSuccess: (context, auth) => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Dashboard(auth: auth)),
+                        (route) => false))),
+            (route) => false);
+      }
+    }
   }
 }

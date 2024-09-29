@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'package:datadirr_auth/api/api.dart';
-import 'package:datadirr_auth/datadirr_auth.dart';
 import 'package:datadirr_auth/utils/common.dart';
 import 'package:datadirr_auth/utils/convert.dart';
+import 'package:datadirr_auth/utils/db.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 
 class Auth {
@@ -48,7 +49,7 @@ class Auth {
         profileImage: obj['profileImage'] ?? "");
   }
 
-  Map<String, dynamic> toMap(Auth auth) => {
+  static Map<String, dynamic> toMap(Auth auth) => {
         "token": auth.token,
         "deviceId": auth.deviceId,
         "authID": auth.authID,
@@ -81,6 +82,47 @@ class Auth {
 
   static fromJsonToList(dynamic list) {
     return (list ?? []).map<Auth>((json) => Auth.fromJson(json)).toList();
+  }
+
+  static Future<String?> currentAuthToken() async {
+    String? value = await DB.db.getString(DB.kCurrentAuth);
+    if (value != null) {
+      var obj = jsonDecode(value);
+      Auth auth = Auth.fromMap(obj);
+      return auth.token;
+    } else {
+      return null;
+    }
+  }
+
+  static setCurrentAuth(Auth? auth) async {
+    if (auth != null) {
+      String value = jsonEncode(Auth.toMap(auth));
+      await DB.db.setString(DB.kCurrentAuth, value);
+    }
+  }
+
+  static Future<Auth?> currentAuth() async {
+    Auth? auth;
+    String? token = await Auth.currentAuthToken();
+    if (token == null) {
+      return auth;
+    }
+    dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          auth = Auth.fromJson(Api.result(res)["auth"]);
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return auth;
+  }
+
+  static removeAuth() async {
+    await DB.db.remove(DB.kCurrentAuth);
   }
 
   static Future<Auth?> signInWithUniqueID(
@@ -175,25 +217,6 @@ class Auth {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
           auth = Auth.fromJson(Api.result(res)["auth"]);
-          DatadirrAuth.setup(token: auth.token);
-        } else {
-          Common.showSnackBar(Api.message(res));
-        }
-      }
-    } catch (_) {
-      Common.showSnackBar(Strings.errDataParse);
-    }
-    return auth;
-  }
-
-  static Future<Auth> signAuth() async {
-    Auth auth = Auth();
-    dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
-    try {
-      if (Api.resNotNull(res)) {
-        if (Api.resultOk(res)) {
-          auth = Auth.fromJson(Api.result(res)["auth"]);
-          DatadirrAuth.setup(token: auth.token);
         } else {
           Common.showSnackBar(Api.message(res));
         }
@@ -245,6 +268,7 @@ class Auth {
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
+          await Auth.removeAuth();
           success = true;
         } else {
           Common.showSnackBar(Api.message(res));
@@ -262,6 +286,7 @@ class Auth {
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
+          await Auth.removeAuth();
           success = true;
         } else {
           Common.showSnackBar(Api.message(res));

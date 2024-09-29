@@ -161,7 +161,7 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
     return Tap(
       onTap: () {
         if (!_loading) {
-          widget.onSuccess(context, auth);
+          _success(auth);
         }
       },
       child: Padding(
@@ -238,17 +238,24 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
   _gotoSignIn() {
     Navigator.push(
             context, MaterialPageRoute(builder: (context) => const SignIn()))
-        .then((value) {
+        .then((value) async {
       Auth? auth = value;
       if (auth != null) {
-        if (mounted) {
-          widget.onSuccess(context, auth);
-        }
+        _success(auth);
       } else {
         if (_auths.isEmpty) {
           _gotoSignIn();
         }
       }
     });
+  }
+
+  _success(Auth? auth) async {
+    if (auth != null) {
+      await Auth.setCurrentAuth(auth);
+      if (mounted) {
+        widget.onSuccess(context, auth);
+      }
+    }
   }
 }
