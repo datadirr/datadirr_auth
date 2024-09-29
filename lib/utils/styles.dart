@@ -80,7 +80,7 @@ class Styles {
           BoxShadow(
               blurRadius: blur,
               spreadRadius: spread,
-              color: blurColor ?? Colorr.grey10)
+              color: blurColor ?? Colorr.transparent)
         ]);
   }
 }

@@ -76,6 +76,7 @@ class Strings {
   static String otpSentToEmail(String email) => "OTP sent to $email";
   static const String checkingInfo = "Checking Info";
   static const String createAccount = "Create account";
+  static const String manageDatadirrAccount = "Manage your datadirr account";
   static const String createDatadirrAccount = "Create a datadirr account";
   static const String createStrongPassword = "Create a strong password";
   static const String enterYourNameAndMobileNumber =

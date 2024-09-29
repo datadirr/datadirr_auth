@@ -7,11 +7,13 @@ import 'package:datadirr_auth/utils/fonts.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart';
 
 class DatadirrSignIn extends StatefulWidget {
   final Function(BuildContext context, Auth auth) onSuccess;
+  final Auth? currentAuth;
 
-  const DatadirrSignIn({super.key, required this.onSuccess});
+  const DatadirrSignIn({super.key, required this.onSuccess, this.currentAuth});
 
   @override
   State<DatadirrSignIn> createState() => _DatadirrSignInState();
@@ -59,11 +61,44 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
                     padding: const EdgeInsets.all(20),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       const VSpace(space: 20),
-                      const CImage(Assets.imgDatadirrTxt, width: 100),
-                      const VSpace(),
-                      Text(Strings.signInWithYourDatadirrAccount,
-                          textAlign: TextAlign.center,
-                          style: Styles.txtRegular()),
+                      Visibility(
+                        visible: (widget.currentAuth == null),
+                        replacement: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ProfileUI(value: widget.currentAuth!.name, size: 80, radius: 50, fontSize: Fonts.fontXXXLarge),
+                            const VSpace(),
+                            Text(widget.currentAuth!.name,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: Styles.txtMedium(fontSize: Fonts.fontXXLarge)),
+                            Text(widget.currentAuth!.email,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: Styles.txtRegular()),
+                            const VSpace(),
+                            FlexWidth(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                decoration: Styles.boxDecoration(borderColor: Colorr.grey50, radius: 30),
+                                child: Center(
+                                  child: Text(Strings.manageDatadirrAccount, style: Styles.txtMedium(color: Colorr.primaryBlue)),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CImage(Assets.imgDatadirrTxt, width: 100),
+                            const VSpace(),
+                            Text(Strings.signInWithYourDatadirrAccount,
+                                textAlign: TextAlign.center,
+                                style: Styles.txtRegular()),
+                          ],
+                        ),
+                      ),
                       const VSpace(space: 30),
                       Flexible(
                         child: Container(
