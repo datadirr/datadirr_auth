@@ -38,7 +38,7 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
       child: Scaffold(
         backgroundColor: Colorr.white,
         body: SafeArea(
-            child: _loading
+            child: (_loading || _auths.isEmpty)
                 ? Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -90,11 +90,6 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
                               const CDivider(),
                               Tap(
                                 onTap: () {
-                                  /*if (mounted) {
-                                                      setState(() {
-                                                        _addAccount = true;
-                                                      });
-                                                    }*/
                                   _gotoSignIn();
                                 },
                                 child: Padding(
@@ -248,6 +243,10 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
       if (auth != null) {
         if (mounted) {
           widget.onSuccess(context, auth);
+        }
+      } else {
+        if (_auths.isEmpty) {
+          _gotoSignIn();
         }
       }
     });
