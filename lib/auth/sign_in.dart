@@ -15,7 +15,8 @@ import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  final Function(BuildContext context, Auth auth)? onSuccess;
+  const SignIn({super.key, this.onSuccess});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -258,8 +259,13 @@ class _SignInState extends State<SignIn> {
     }
     Auth? auth = await Auth.signIn(uniqueID: email, password: password);
     if (auth != null) {
+      await Auth.setCurrentAuth(auth);
       if (mounted) {
-        Navigator.pop(context, auth);
+        if (widget.onSuccess == null) {
+          Navigator.pop(context, auth);
+        } else {
+          widget.onSuccess!(context, auth);
+        }
       }
     } else {
       Common.showSnackBar(Strings.plzTryAgain);

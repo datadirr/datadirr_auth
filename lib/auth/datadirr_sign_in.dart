@@ -90,7 +90,7 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
                               const CDivider(),
                               Tap(
                                 onTap: () {
-                                  _gotoSignIn();
+                                  _gotoSignIn(back: true);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -235,19 +235,23 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
     }
   }
 
-  _gotoSignIn() {
-    Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const SignIn()))
-        .then((value) async {
-      Auth? auth = value;
-      if (auth != null) {
-        _success(auth);
-      } else {
-        if (_auths.isEmpty) {
-          _gotoSignIn();
+  _gotoSignIn({bool back = false}) {
+    if (back) {
+      Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const SignIn()))
+          .then((value) async {
+        Auth? auth = value;
+        if (auth != null) {
+          _success(auth);
         }
-      }
-    });
+      });
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SignIn(onSuccess: widget.onSuccess)),
+          (route) => false);
+    }
   }
 
   _success(Auth? auth) async {
