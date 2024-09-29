@@ -16,6 +16,7 @@ class Auth {
   String firstName;
   String middleName;
   String lastName;
+  String profileImage;
 
   Auth(
       {this.token = "",
@@ -28,7 +29,39 @@ class Auth {
       this.fullName = "",
       this.firstName = "",
       this.middleName = "",
-      this.lastName = ""});
+      this.lastName = "",
+      this.profileImage = ""});
+
+  factory Auth.fromMap(Map<String, dynamic> obj) {
+    return Auth(
+        token: obj['token'] ?? "",
+        deviceId: obj['deviceId'] ?? "",
+        authID: obj['deviceId'] ?? "",
+        username: obj['username'] ?? "",
+        email: obj['email'] ?? "",
+        mobile: obj['mobile'] ?? "",
+        name: obj['name'] ?? "",
+        fullName: obj['fullName'] ?? "",
+        firstName: obj['firstName'] ?? "",
+        middleName: obj['middleName'] ?? "",
+        lastName: obj['lastName'] ?? "",
+        profileImage: obj['profileImage'] ?? "");
+  }
+
+  Map<String, dynamic> toMap(Auth auth) => {
+        "token": auth.token,
+        "deviceId": auth.deviceId,
+        "authID": auth.authID,
+        "username": auth.username,
+        "email": auth.email,
+        "mobile": auth.mobile,
+        "name": auth.name,
+        "fullName": auth.fullName,
+        "firstName": auth.firstName,
+        "middleName": auth.middleName,
+        "lastName": auth.lastName,
+        "profileImage": auth.profileImage
+      };
 
   factory Auth.fromJson(Map<String, dynamic> json) {
     return Auth(
@@ -42,7 +75,8 @@ class Auth {
         fullName: json['fullName'] ?? "",
         firstName: json['firstName'] ?? "",
         middleName: json['middleName'] ?? "",
-        lastName: json['lastName'] ?? "");
+        lastName: json['lastName'] ?? "",
+        profileImage: json['profileImage'] ?? "");
   }
 
   static fromJsonToList(dynamic list) {
