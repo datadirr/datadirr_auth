@@ -12,6 +12,7 @@ import 'package:flutter_widget_function/function/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Common {
   Common._();
@@ -38,6 +39,10 @@ class Common {
     } else {
       return "";
     }
+  }
+
+  static Future<String> getPackageName() async {
+    return (await PackageInfo.fromPlatform()).packageName;
   }
 
   static setOnlyPortraitMode() {

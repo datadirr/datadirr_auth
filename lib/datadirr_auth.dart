@@ -1,26 +1,14 @@
-import 'package:datadirr_auth/utils/common.dart';
+import 'package:datadirr_auth/utils/db.dart';
 import 'datadirr_auth_platform_interface.dart';
 
 class DatadirrAuth {
-  String deviceId = "";
-  String appID = "";
-  String accessKey = "";
-  String token = "";
-  static DatadirrAuth datadirrInit = DatadirrAuth();
-  static DatadirrAuth datadirrSetup = DatadirrAuth();
 
-  static init({required String appID, required String accessKey}) async {
-    DatadirrAuth datadirrAuth = DatadirrAuth();
-    datadirrAuth.deviceId = await Common.getDeviceId();
-    datadirrAuth.appID = appID;
-    datadirrAuth.accessKey = accessKey;
-    DatadirrAuth.datadirrInit = datadirrAuth;
+  static init({required String accessKey}) async {
+    await DB.db.setString(DB.kAccessKey, accessKey);
   }
 
   static setup({required String token}) async {
-    DatadirrAuth datadirrAuth = DatadirrAuth();
-    datadirrAuth.token = token;
-    DatadirrAuth.datadirrSetup = datadirrAuth;
+    await DB.db.setString(DB.kToken, token);
   }
 
   Future<String?> getPlatformVersion() {

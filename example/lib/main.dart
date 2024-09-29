@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DatadirrAuth.init(
-      appID: "com.datadirr.societymanager", accessKey: "societymanager");
+  await DatadirrAuth.init(accessKey: "datadirr_auth_example");
   await DatadirrAuth.setup(
       token:
           "ZB9iA8w9HT5gL6v6b4QPHEV2eDMwTGN3aGd4R1h6UEp6ZnZJcElEbHZKZ3pHMkdPblJiVVZtb3p0M1VqbmhQeG5wMUkxQXpiazFnVk5SaWNRMWNGdDhkakNqYkRhNU1oa0htbDBld0RNV2RDa0s5cElMTVpITzlxWFdIMDUvb0ZEV09HSThQc0h3YTQrK21O");
