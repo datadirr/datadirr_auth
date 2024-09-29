@@ -1,4 +1,5 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/auth/manage_account.dart';
 import 'package:datadirr_auth/auth/sign_in.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
@@ -11,9 +12,9 @@ import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart
 
 class DatadirrSignIn extends StatefulWidget {
   final Function(BuildContext context, Auth auth) onSuccess;
-  final Auth? currentAuth;
+  final Auth? auth;
 
-  const DatadirrSignIn({super.key, required this.onSuccess, this.currentAuth});
+  const DatadirrSignIn({super.key, required this.onSuccess, this.auth});
 
   @override
   State<DatadirrSignIn> createState() => _DatadirrSignInState();
@@ -62,27 +63,41 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       const VSpace(space: 20),
                       Visibility(
-                        visible: (widget.currentAuth == null),
+                        visible: (widget.auth == null),
                         replacement: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            ProfileUI(value: widget.currentAuth!.name, size: 80, radius: 50, fontSize: Fonts.fontXXXLarge),
+                            ProfileUI(
+                                value: widget.auth!.name,
+                                size: 80,
+                                radius: 50,
+                                fontSize: Fonts.fontXXXLarge),
                             const VSpace(),
-                            Text(widget.currentAuth!.name,
+                            Text(widget.auth!.name,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
-                                style: Styles.txtMedium(fontSize: Fonts.fontXXLarge)),
-                            Text(widget.currentAuth!.email,
+                                style: Styles.txtMedium(
+                                    fontSize: Fonts.fontXXLarge)),
+                            Text(widget.auth!.email,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 style: Styles.txtRegular()),
                             const VSpace(),
                             FlexWidth(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                decoration: Styles.boxDecoration(borderColor: Colorr.grey50, radius: 30),
-                                child: Center(
-                                  child: Text(Strings.manageDatadirrAccount, style: Styles.txtMedium(color: Colorr.primaryBlue)),
+                              child: Tap(
+                                onTap: () {
+                                  _gotoManageAccount();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  decoration: Styles.boxDecoration(
+                                      borderColor: Colorr.grey50, radius: 30),
+                                  child: Center(
+                                    child: Text(Strings.manageDatadirrAccount,
+                                        style: Styles.txtMedium(
+                                            color: Colorr.primaryBlue)),
+                                  ),
                                 ),
                               ),
                             )
@@ -102,6 +117,7 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
                       const VSpace(space: 30),
                       Flexible(
                         child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: Styles.boxDecoration(
                               radius: 30,
                               color: Colorr.white,
@@ -295,6 +311,15 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
       if (mounted) {
         widget.onSuccess(context, auth);
       }
+    }
+  }
+
+  _gotoManageAccount() {
+    if (widget.auth != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ManageAccount(auth: widget.auth!)));
     }
   }
 }
