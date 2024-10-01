@@ -36,6 +36,10 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     super.initState();
+    _init();
+  }
+
+  _init() async {
     _isEmail = true;
   }
 

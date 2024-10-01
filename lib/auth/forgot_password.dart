@@ -39,11 +39,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   void initState() {
     super.initState();
-    _isEmail = true;
     _init();
   }
 
   _init() async {
+    _isEmail = true;
     await _sendOTP(widget.auth.email);
   }
 

@@ -10,6 +10,7 @@ import 'package:datadirr_auth/utils/fonts.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropdown_plus/dropdown_item.dart';
 import 'package:flutter_widget_function/function/extension.dart';
 import 'package:flutter_widget_function/function/utils.dart';
 import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
@@ -33,6 +34,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _conOTP = TextEditingController();
   final TextEditingController _conPassword = TextEditingController();
   final TextEditingController _conConfirmPassword = TextEditingController();
+  List<DropdownItem> _genderList = [];
   Country? _country;
   bool _isPasswordVisible = false;
 
@@ -46,7 +48,12 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
+    _init();
+  }
+
+  _init() async {
     _isPersonalDetails = true;
+    _init();
   }
 
   @override
