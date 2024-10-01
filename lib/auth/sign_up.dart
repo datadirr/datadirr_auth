@@ -53,7 +53,6 @@ class _SignUpState extends State<SignUp> {
 
   _init() async {
     _isPersonalDetails = true;
-    _init();
   }
 
   @override
