@@ -21,11 +21,13 @@ class Api {
 
   // systemClass
   static const String cCountry = 'Country';
+  static const String cGender = 'Gender';
   static const String cAuth = 'Auth';
   static const String cVerification = 'Verification';
 
   // systemFunction
   static const String fCountries = 'countries';
+  static const String fGenders = 'genders';
   static const String fSignUp = 'signup';
   static const String fSendOTPToEmail = 'sendOTPToEmail';
   static const String fVerifyOTPByEmail = 'verifyOTPByEmail';

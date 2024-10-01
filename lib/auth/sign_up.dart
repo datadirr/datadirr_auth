@@ -1,6 +1,6 @@
 import 'package:datadirr_auth/auth/auth.dart';
-import 'package:datadirr_auth/auth/country.dart';
-import 'package:datadirr_auth/auth/country_selection.dart';
+import 'package:datadirr_auth/data/country/country.dart';
+import 'package:datadirr_auth/data/country/country_selection.dart';
 import 'package:datadirr_auth/auth/verification.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';

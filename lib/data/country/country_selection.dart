@@ -1,4 +1,4 @@
-import 'package:datadirr_auth/auth/country.dart';
+import 'package:datadirr_auth/data/country/country.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/common.dart';
