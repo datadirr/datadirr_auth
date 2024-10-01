@@ -284,7 +284,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       const VSpace(),
                       Text(
-                        Strings.plzCheckMail,
+                        Strings.plzCheckMailMsg,
                         style: Styles.txtRegular(
                             color: Colorr.grey50, fontSize: Fonts.fontXSmall),
                       )
