@@ -1,7 +1,9 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/custom_widgets.dart';
 import 'package:datadirr_auth/utils/fonts.dart';
+import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -47,6 +49,20 @@ class _ManageAccountState extends State<ManageAccount> {
                       ),
             )),
       ),
+    );
+  }
+  
+  _itemRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              Text(Strings.birthdate)
+            ],
+          ),
+        ),Icon(Assets.icArrowForward)
+      ],
     );
   }
 }

@@ -140,7 +140,7 @@ class _SignUpState extends State<SignUp> {
           Text(Strings.enterYourPersonalDetailsAndContactInformation,
               textAlign: TextAlign.center, style: Styles.txtRegular()),
           const VSpace(space: 30),
-          Text(Strings.cYourName,
+          Text(Strings.cName,
               style: Styles.txtRegular(
                   color: Colorr.grey50, fontSize: Fonts.fontSmall)),
           const VSpace(),
@@ -161,7 +161,7 @@ class _SignUpState extends State<SignUp> {
           const VSpace(space: 20),
           const CDivider(),
           const VSpace(space: 20),
-          Text(Strings.cBirthdateGender,
+          Text("${Strings.cBirthdate} & ${Strings.cGender}",
               style: Styles.txtRegular(
                   color: Colorr.grey50, fontSize: Fonts.fontSmall)),
           const VSpace(),

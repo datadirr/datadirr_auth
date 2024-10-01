@@ -91,7 +91,8 @@ class Strings {
   static const String plzSelectYourGender = "Please select your gender";
   static const String birthdate = "Birth Date";
   static const String plzSelectYourBirthdate = "Please select your birth date";
-  static const String cYourName = "YOUR NAME";
-  static const String cBirthdateGender = "BIRTH DATE & GENDER";
+  static const String cName = "NAME";
+  static const String cBirthdate = "BIRTH DATE";
+  static const String cGender = "GENDER";
   static const String cContactInfo = "CONTACT INFO";
 }
