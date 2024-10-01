@@ -26,43 +26,68 @@ class _ManageAccountState extends State<ManageAccount> {
       child: Scaffold(
         backgroundColor: Colorr.white,
         body: SafeArea(
-            child: Center(
+            child: SingleChildScrollView(
               child: Column(
-                        children: [
-              const VSpace(space: 30),
-              ProfileUI(
-                  value: widget.auth.name,
-                  size: 80,
-                  radius: 50,
-                  fontSize: Fonts.fontXXXLarge),
-              const VSpace(),
-              Text(widget.auth.name,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: Styles.txtMedium(fontSize: Fonts.fontXXLarge)),
-              Text(widget.auth.email,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: Styles.txtRegular()),
-              const VSpace(),
-                        ],
-                      ),
+                children: [
+                  const VSpace(space: 30),
+                  ProfileUI(
+                      value: widget.auth.name,
+                      size: 80,
+                      radius: 50,
+                      fontSize: Fonts.fontXXXLarge),
+                  const VSpace(),
+                  Text(widget.auth.name,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: Styles.txtMedium(fontSize: Fonts.fontXXLarge)),
+                  Text(widget.auth.email,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: Styles.txtRegular()),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const CDivider(),
+                        const VSpace(),
+                        Text(Strings.basicInfo,
+                            overflow: TextOverflow.ellipsis, style: Styles.txtMedium()),
+                        const VSpace(space: 15),
+                        _itemRow(
+                            title: Strings.name.toUpperCase(),
+                            value: widget.auth.fullName),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             )),
       ),
     );
   }
-  
-  _itemRow() {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            children: [
-              Text(Strings.birthdate)
-            ],
+
+  _itemRow({required String title, required String value, Function()? onTap}) {
+    return Tap(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(title,
+                    overflow: TextOverflow.ellipsis,
+                    style: Styles.txtRegular(
+                        color: Colorr.grey50, fontSize: Fonts.fontXSmall)),
+                Text(value, style: Styles.txtRegular()),
+              ],
+            ),
           ),
-        ),Icon(Assets.icArrowForward)
-      ],
+          const Icon(Assets.icArrowForward, size: 20)
+        ],
+      ),
     );
   }
 }
