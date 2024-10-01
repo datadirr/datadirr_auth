@@ -79,8 +79,8 @@ class Strings {
   static const String manageDatadirrAccount = "Manage your datadirr account";
   static const String createDatadirrAccount = "Create a datadirr account";
   static const String createStrongPassword = "Create a strong password";
-  static const String enterYourNameAndMobileNumber =
-      "Enter your name and mobile number";
+  static const String enterYourPersonalDetailsAndContactInformation =
+      "Enter your personal details and contact information";
   static const String plzEnterYourName = "please enter your name";
   static const String addAnotherAccount = "Add another account";
   static const String doNotHaveAnAccount = "Don't have an account?";
@@ -311,4 +311,12 @@ class Strings {
   static const String notify = "Notify";
   static const String free = "Free";
   static const String countries = "Countries";
+  static const String plzSelectCountryForMobileNumber = "Please select country for mobile number";
+  static const String gender = "Gender";
+  static const String plzSelectYourGender = "Please select your gender";
+  static const String birthdate = "Birth Date";
+  static const String plzSelectYourBirthdate = "Please select your birth date";
+  static const String cYourName = "YOUR NAME";
+  static const String cBirthdateGender = "BIRTH DATE & GENDER";
+  static const String cContactInfo = "CONTACT INFO";
 }

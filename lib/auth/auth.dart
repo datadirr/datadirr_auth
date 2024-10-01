@@ -175,6 +175,10 @@ class Auth {
       {required String firstName,
       required String middleName,
       required String lastName,
+      required String birthdate,
+      required String genderId,
+      required String countryId,
+      required String countryPhoneCodePlus,
       required String mobile,
       required String email,
       required String password}) async {
@@ -183,6 +187,10 @@ class Auth {
       "firstName": firstName,
       "middleName": middleName,
       "lastName": lastName,
+      "birthdate": birthdate,
+      "genderId": genderId,
+      "countryId": countryId,
+      "countryPhoneCodePlus": countryPhoneCodePlus,
       "mobile": mobile,
       "email": Convert.stringToBase64(email),
       "password": Convert.stringToBase64(password)

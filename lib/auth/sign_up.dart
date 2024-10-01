@@ -2,6 +2,7 @@ import 'package:datadirr_auth/auth/auth.dart';
 import 'package:datadirr_auth/data/country/country.dart';
 import 'package:datadirr_auth/data/country/country_selection.dart';
 import 'package:datadirr_auth/auth/verification.dart';
+import 'package:datadirr_auth/data/gender/gender.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/common.dart';
@@ -9,6 +10,7 @@ import 'package:datadirr_auth/utils/custom_widgets.dart';
 import 'package:datadirr_auth/utils/fonts.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
+import 'package:date_time_plus/date_times.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown_plus/dropdown_item.dart';
 import 'package:flutter_widget_function/function/extension.dart';
@@ -34,7 +36,9 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _conOTP = TextEditingController();
   final TextEditingController _conPassword = TextEditingController();
   final TextEditingController _conConfirmPassword = TextEditingController();
+  String _birthdate = "";
   List<DropdownItem> _genderList = [];
+  String _genderId = "";
   Country? _country;
   bool _isPasswordVisible = false;
 
@@ -53,6 +57,7 @@ class _SignUpState extends State<SignUp> {
 
   _init() async {
     _isPersonalDetails = true;
+    _getGender();
   }
 
   @override
@@ -126,14 +131,19 @@ class _SignUpState extends State<SignUp> {
       visible: _isPersonalDetails,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(Strings.createDatadirrAccount,
               textAlign: TextAlign.center,
               style: Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
           const VSpace(space: 5),
-          Text(Strings.enterYourNameAndMobileNumber,
+          Text(Strings.enterYourPersonalDetailsAndContactInformation,
               textAlign: TextAlign.center, style: Styles.txtRegular()),
           const VSpace(space: 30),
+          Text(Strings.cYourName,
+              style: Styles.txtRegular(
+                  color: Colorr.grey50, fontSize: Fonts.fontSmall)),
+          const VSpace(),
           CATextField(
             controller: _conFirstName,
             hintText: Strings.firstName,
@@ -151,12 +161,61 @@ class _SignUpState extends State<SignUp> {
           const VSpace(space: 20),
           const CDivider(),
           const VSpace(space: 20),
+          Text(Strings.cBirthdateGender,
+              style: Styles.txtRegular(
+                  color: Colorr.grey50, fontSize: Fonts.fontSmall)),
+          const VSpace(),
+          Row(
+            children: [
+              Expanded(
+                child: CAText(
+                    onTap: () {
+                      DateTimes.datePicker(
+                          context: context,
+                          date: _birthdate,
+                          onSelected: (date) {
+                            _birthdate = date;
+                            if (mounted) {
+                              setState(() {});
+                            }
+                          },
+                          maxDate: DateTimes.getCurrentDate());
+                    },
+                    text: DateTimes.formatDateTime(
+                        dateTime: _birthdate,
+                        inFormat: Format.fyyyyMMdd,
+                        outFormat: Format.fddMMyyyy),
+                    hintText: Strings.birthdate),
+              ),
+              const HSpace(),
+              Expanded(
+                child: CADropdown(
+                    hintText: Strings.gender,
+                    selectedId: _genderId,
+                    list: _genderList,
+                    onSelected: (id) {
+                      _genderId = id;
+                      if (mounted) {
+                        setState(() {});
+                      }
+                    }),
+              ),
+            ],
+          ),
+          const VSpace(space: 20),
+          const CDivider(),
+          const VSpace(space: 20),
+          Text(Strings.cContactInfo,
+              style: Styles.txtRegular(
+                  color: Colorr.grey50, fontSize: Fonts.fontSmall)),
+          const VSpace(),
           Row(
             children: [
               FlexWidth(
                 child: CAText(
-                    text:
-                        (_country != null) ? _country!.countryPhoneCodePlus : "-",
+                    text: (_country != null)
+                        ? _country!.countryPhoneCodePlus
+                        : "-",
                     onTap: () {
                       if (!_loading) {
                         _gotoCountrySelection();
@@ -312,19 +371,25 @@ class _SignUpState extends State<SignUp> {
 
   _gotoCountrySelection() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                CountrySelection(country: _country)))
+            context,
+            MaterialPageRoute(
+                builder: (context) => CountrySelection(country: _country)))
         .then((value) {
-          Country? country = value;
-          if (country != null) {
-            _country = country;
-            if (mounted) {
-              setState(() {});
-            }
-          }
+      Country? country = value;
+      if (country != null) {
+        _country = country;
+        if (mounted) {
+          setState(() {});
+        }
+      }
     });
+  }
+
+  _getGender() async {
+    _genderList = await Gender.dropdownGender();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   _checkValidDetailsOTP({bool send = false}) async {
@@ -426,6 +491,18 @@ class _SignUpState extends State<SignUp> {
         Common.showSnackBar(Strings.plzEnterYourName);
         return;
       }
+      if (Utils.isNullOREmpty(_birthdate)) {
+        Common.showSnackBar(Strings.plzSelectYourBirthdate);
+        return;
+      }
+      if (Utils.isNullOREmpty(_genderId)) {
+        Common.showSnackBar(Strings.plzSelectYourGender);
+        return;
+      }
+      if (_country == null) {
+        Common.showSnackBar(Strings.plzSelectCountryForMobileNumber);
+        return;
+      }
       if (Utils.isNullOREmpty(mobile)) {
         Common.showSnackBar(Strings.plzEnterMobileNumber);
         return;
@@ -435,6 +512,14 @@ class _SignUpState extends State<SignUp> {
       if (_isVerified) {
         if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
           Common.showSnackBar(Strings.plzEnterYourName);
+          return;
+        }
+        if (Utils.isNullOREmpty(_genderId)) {
+          Common.showSnackBar(Strings.plzSelectYourGender);
+          return;
+        }
+        if (_country == null) {
+          Common.showSnackBar(Strings.plzSelectCountryForMobileNumber);
           return;
         }
         if (Utils.isNullOREmpty(mobile)) {
@@ -457,6 +542,14 @@ class _SignUpState extends State<SignUp> {
     } else if (_isPassword) {
       if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
         Common.showSnackBar(Strings.plzEnterYourName);
+        return;
+      }
+      if (Utils.isNullOREmpty(_genderId)) {
+        Common.showSnackBar(Strings.plzSelectYourGender);
+        return;
+      }
+      if (_country == null) {
+        Common.showSnackBar(Strings.plzSelectCountryForMobileNumber);
         return;
       }
       if (Utils.isNullOREmpty(mobile)) {
@@ -502,6 +595,10 @@ class _SignUpState extends State<SignUp> {
         firstName: firstName,
         middleName: middleName,
         lastName: lastName,
+        birthdate: _birthdate,
+        genderId: _genderId,
+        countryId: _country!.countryId,
+        countryPhoneCodePlus: _country!.countryPhoneCodePlus,
         mobile: mobile,
         email: email,
         password: password);
