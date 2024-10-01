@@ -310,4 +310,5 @@ class Strings {
   static const String resultsDeclared = "Results declared";
   static const String notify = "Notify";
   static const String free = "Free";
+  static const String countries = "Countries";
 }

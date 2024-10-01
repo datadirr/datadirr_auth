@@ -109,8 +109,8 @@ class NoData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Image.asset(Assets.imgNoData,
-            width: width ?? 250, height: height ?? 250));
+        child: CImage(Assets.imgNoData,
+            width: width ?? 150, height: height ?? 150));
   }
 }
 

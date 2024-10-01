@@ -20,10 +20,12 @@ class Api {
   static const String deletedAttachmentArray = 'deleteAttachmentArray';
 
   // systemClass
+  static const String cCountry = 'Country';
   static const String cAuth = 'Auth';
   static const String cVerification = 'Verification';
 
   // systemFunction
+  static const String fCountries = 'countries';
   static const String fSignUp = 'signup';
   static const String fSendOTPToEmail = 'sendOTPToEmail';
   static const String fVerifyOTPByEmail = 'verifyOTPByEmail';

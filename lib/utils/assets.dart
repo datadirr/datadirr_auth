@@ -21,6 +21,7 @@ class Assets {
   static const String imgSearch = "${rootImages}img_search.png";
 
   static const IconData icAddAccount = Icons.person_add_outlined;
+  static const IconData icArrowBackward = Icons.arrow_back_rounded;
   static const IconData icArrowDownward = Icons.keyboard_arrow_down_rounded;
   static const IconData icAdd = Icons.add_rounded;
   static const IconData icSignOut = Icons.logout_rounded;

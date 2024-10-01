@@ -1,4 +1,6 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/auth/country.dart';
+import 'package:datadirr_auth/auth/country_selection.dart';
 import 'package:datadirr_auth/auth/verification.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
@@ -31,6 +33,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _conOTP = TextEditingController();
   final TextEditingController _conPassword = TextEditingController();
   final TextEditingController _conConfirmPassword = TextEditingController();
+  Country? _country;
   bool _isPasswordVisible = false;
 
   bool _isPersonalDetails = false;
@@ -142,11 +145,28 @@ class _SignUpState extends State<SignUp> {
           const VSpace(space: 20),
           const CDivider(),
           const VSpace(space: 20),
-          CATextField(
-            controller: _conMobile,
-            hintText: Strings.mobileNumber,
-            inputType: TextInputType.number,
-            inputFormatters: [Validate.intValueFormatter()],
+          Row(
+            children: [
+              FlexWidth(
+                child: CAText(
+                    text:
+                        (_country != null) ? _country!.countryPhoneCodePlus : "-",
+                    onTap: () {
+                      if (!_loading) {
+                        _gotoCountrySelection();
+                      }
+                    }),
+              ),
+              const HSpace(),
+              Expanded(
+                child: CATextField(
+                  controller: _conMobile,
+                  hintText: Strings.mobileNumber,
+                  inputType: TextInputType.number,
+                  inputFormatters: [Validate.intValueFormatter()],
+                ),
+              ),
+            ],
           ),
           const VSpace(space: 30),
         ],
@@ -282,6 +302,23 @@ class _SignUpState extends State<SignUp> {
         ],
       ),
     );
+  }
+
+  _gotoCountrySelection() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                CountrySelection(country: _country)))
+        .then((value) {
+          Country? country = value;
+          if (country != null) {
+            _country = country;
+            if (mounted) {
+              setState(() {});
+            }
+          }
+    });
   }
 
   _checkValidDetailsOTP({bool send = false}) async {
