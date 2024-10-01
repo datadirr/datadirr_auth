@@ -17,6 +17,12 @@ class Auth {
   String firstName;
   String middleName;
   String lastName;
+  String birthdate;
+  String genderId;
+  String genderName;
+  String countryId;
+  String countryName;
+  String countryPhoneCodePlus;
   String profileImage;
 
   Auth(
@@ -31,6 +37,12 @@ class Auth {
       this.firstName = "",
       this.middleName = "",
       this.lastName = "",
+      this.birthdate = "",
+      this.genderId = "",
+      this.genderName = "",
+      this.countryId = "",
+      this.countryName = "",
+      this.countryPhoneCodePlus = "",
       this.profileImage = ""});
 
   factory Auth.fromMap(Map<String, dynamic> obj) {
@@ -46,6 +58,12 @@ class Auth {
         firstName: obj['firstName'] ?? "",
         middleName: obj['middleName'] ?? "",
         lastName: obj['lastName'] ?? "",
+        birthdate: obj['birthdate'] ?? "",
+        genderId: obj['genderId'] ?? "",
+        genderName: obj['genderName'] ?? "",
+        countryId: obj['countryId'] ?? "",
+        countryName: obj['countryName'] ?? "",
+        countryPhoneCodePlus: obj['countryPhoneCodePlus'] ?? "",
         profileImage: obj['profileImage'] ?? "");
   }
 
@@ -61,6 +79,12 @@ class Auth {
         "firstName": auth.firstName,
         "middleName": auth.middleName,
         "lastName": auth.lastName,
+        "birthdate": auth.birthdate,
+        "genderId": auth.genderId,
+        "genderName": auth.genderName,
+        "countryId": auth.countryId,
+        "countryName": auth.countryName,
+        "countryPhoneCodePlus": auth.countryPhoneCodePlus,
         "profileImage": auth.profileImage
       };
 
@@ -77,6 +101,12 @@ class Auth {
         firstName: json['firstName'] ?? "",
         middleName: json['middleName'] ?? "",
         lastName: json['lastName'] ?? "",
+        birthdate: json['birthdate'] ?? "",
+        genderId: json['genderId'] ?? "",
+        genderName: json['genderName'] ?? "",
+        countryId: json['countryId'] ?? "",
+        countryName: json['countryName'] ?? "",
+        countryPhoneCodePlus: json['countryPhoneCodePlus'] ?? "",
         profileImage: json['profileImage'] ?? "");
   }
 
