@@ -14,11 +14,13 @@ import 'package:datadirr_auth/utils/styles.dart';
 import 'package:date_time_plus/date_times.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
+import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart';
 
 class ManageAccount extends StatefulWidget {
   final Auth auth;
+  final Function(BuildContext context)? onSignOut;
 
-  const ManageAccount({super.key, required this.auth});
+  const ManageAccount({super.key, required this.auth, this.onSignOut});
 
   @override
   State<ManageAccount> createState() => _ManageAccountState();
@@ -75,9 +77,13 @@ class _ManageAccountState extends State<ManageAccount> {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: Styles.txtRegular()),
-                CTextButton(text: Strings.signOut, onTap: () {
-                  _signOut();
-                }),
+                FlexWidth(
+                  child: CTextButton(
+                      text: Strings.signOut,
+                      onTap: () {
+                        _signOut();
+                      }),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -260,10 +266,28 @@ class _ManageAccountState extends State<ManageAccount> {
   }
 
   _signOut() async {
-    Common.showConfirmDialog(context, (confirm) {
-      if (confirm) {
+    Common.showSignOutDialog(context, onThisDevice: () {
+      _signOutThisDevice();
+    }, onAllDevices: () {
+      _signOutAllDevices();
+    });
+  }
 
+  _signOutThisDevice() async {
+    bool success = await Auth.signOut();
+    if (success) {
+      if (widget.onSignOut != null) {
+        widget.onSignOut!(context);
       }
-    }, title: Strings.signOut);
+    }
+  }
+
+  _signOutAllDevices() async {
+    bool success = await Auth.signOutAll();
+    if (success) {
+      if (widget.onSignOut != null) {
+        widget.onSignOut!(context);
+      }
+    }
   }
 }

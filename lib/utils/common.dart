@@ -45,7 +45,7 @@ class Common {
     if (Platform.isAndroid) {
       return ((await DeviceInfoPlugin().androidInfo).model);
     } else if (Platform.isIOS) {
-      return ((await DeviceInfoPlugin().iosInfo).utsname.sysname) ?? "";
+      return ((await DeviceInfoPlugin().iosInfo).utsname.sysname);
     } else if (Platform.isWindows) {
       return ((await DeviceInfoPlugin().windowsInfo).computerName);
     } else {
@@ -183,6 +183,79 @@ class Common {
                     const VSpace(space: 5),
                   ],
                 ),
+              ),
+            ),
+          );
+        });
+  }
+
+  static void showSignOutDialog(BuildContext context,
+      {required Function() onThisDevice, required Function() onAllDevices}) {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Constants.dialogRadius)),
+            elevation: Constants.dialogElevation,
+            backgroundColor: Constants.dialogBackgroundColor,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        Text(Strings.signOut,
+                            textAlign: TextAlign.center,
+                            style:
+                            Styles.txtMedium(fontSize: Fonts.fontXLarge)),
+                        const VSpace(space: 5),
+                        Text(Strings.areYouSure,
+                            textAlign: TextAlign.center,
+                            style: Styles.txtRegular()),
+                      ],
+                    ),
+                  ),
+                  const CDivider(),
+                  Column(
+                    children: [
+                      CButton(
+                          text: Strings.signOutThisDevice,
+                          backColor: Colorr.white,
+                          textStyle: Styles.txtRegular(
+                              fontSize: Fonts.fontLarge,
+                              color: Colorr.primaryBlue),
+                          onTap: () {
+                            Navigator.pop(context);
+                            onThisDevice();
+                          }),
+                      const CDivider(),
+                      CButton(
+                          text: Strings.signOutAllDevices,
+                          backColor: Colorr.white,
+                          textStyle: Styles.txtRegular(
+                              fontSize: Fonts.fontLarge,
+                              color: Colorr.primaryBlue),
+                          onTap: () {
+                            Navigator.pop(context);
+                            onAllDevices();
+                          }),
+                      const CDivider(),
+                      CButton(
+                          text: Strings.bNo,
+                          backColor: Colorr.white,
+                          textStyle: Styles.txtRegular(
+                              fontSize: Fonts.fontLarge,
+                              color: Colorr.grey50),
+                          onTap: () {
+                            Navigator.pop(context);
+                          }),
+                    ],
+                  ),
+                  const VSpace(space: 5),
+                ],
               ),
             ),
           );

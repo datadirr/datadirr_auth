@@ -1,5 +1,7 @@
 import 'package:datadirr_auth/auth/auth.dart';
 import 'package:datadirr_auth/auth/datadirr_sign_in.dart';
+import 'package:datadirr_auth/auth/manage/manage_account.dart';
+import 'package:datadirr_auth_example/Splash.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -18,7 +20,8 @@ class _DashboardState extends State<Dashboard> {
       body: SafeArea(
           child: ElevatedButton(
               onPressed: () {
-                _manageSignIn();
+                //_manageSignIn();
+                _directManageSignIn();
               },
               child: Text(widget.auth.firstName))),
     );
@@ -33,9 +36,26 @@ class _DashboardState extends State<Dashboard> {
                   auth: widget.auth,
                   onSuccess: (context, auth) => Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => Dashboard(auth: auth)),
+                      MaterialPageRoute(builder: (context) => const Splash()),
+                      (route) => false),
+                  onSignOut: (context) => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Splash()),
                       (route) => false))));
+    }
+  }
+
+  _directManageSignIn() async {
+    if (mounted) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ManageAccount(
+                  auth: widget.auth,
+                  onSignOut: (context) => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Splash()),
+                          (route) => false))));
     }
   }
 }

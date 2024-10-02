@@ -13,8 +13,10 @@ import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart
 class DatadirrSignIn extends StatefulWidget {
   final Function(BuildContext context, Auth auth) onSuccess;
   final Auth? auth;
+  final Function(BuildContext context)? onSignOut;
 
-  const DatadirrSignIn({super.key, required this.onSuccess, this.auth});
+  const DatadirrSignIn(
+      {super.key, required this.onSuccess, this.auth, this.onSignOut});
 
   @override
   State<DatadirrSignIn> createState() => _DatadirrSignInState();
@@ -319,7 +321,10 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => ManageAccount(auth: widget.auth!)));
+              builder: (context) => ManageAccount(
+                    auth: widget.auth!,
+                    onSignOut: widget.onSignOut,
+                  )));
     }
   }
 }
