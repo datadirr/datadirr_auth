@@ -42,6 +42,7 @@ class Strings {
   static const String doNotHaveAnAccount = "Don't have an account?";
   static const String alreadyHaveAnAccount = "Already have an account!";
   static const String accountRecovery = "Account Recovery";
+  static const String account = "Account";
   static const String accountRecoveryMsg =
       "To help keep your account safe, datadirr wants to make sure that it's really you trying to sign in";
   static const String signIn = "Sign in";
@@ -94,4 +95,7 @@ class Strings {
   static const String name = "Name";
   static const String contactInfo = "Contact Info";
   static const String basicInfo = "Basic Info";
+  static const String nameChangesMsg = "Changes to your name will be reflected across your datadirr Account.";
+  static const String whoCanSeeYourName = "Who can see your name";
+  static const String whoCanSeeYourNameMsg = "Anyone can see this info when they communicate with you or view content you create in datadirr Account.";
 }

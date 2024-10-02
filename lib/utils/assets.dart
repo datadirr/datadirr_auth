@@ -27,4 +27,5 @@ class Assets {
   static const IconData icAdd = Icons.add_rounded;
   static const IconData icSignOut = Icons.logout_rounded;
   static const IconData icSystemUpdate = Icons.system_update_alt_rounded;
+  static const IconData icPeople = Icons.people_alt_outlined;
 }

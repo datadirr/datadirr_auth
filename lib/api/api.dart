@@ -39,6 +39,7 @@ class Api {
   static const String fSignAuth = 'signAuth';
   static const String fAuthLinkedByDevice = 'authLinkedByDevice';
   static const String fAuthDataByUniqueID = 'authDataByUniqueID';
+  static const String fChangeName = 'changeName';
 
   //body params
   static const String bUniqueID = 'uniqueID';

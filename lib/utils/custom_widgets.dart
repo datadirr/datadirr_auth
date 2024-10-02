@@ -1,3 +1,4 @@
+import 'package:datadirr_auth/auth/auth.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/fonts.dart';
@@ -8,6 +9,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_plus/dropdown_item.dart';
 import 'package:flutter_widget_function/function/utils.dart';
+
+class DatadirrAccountAppBar extends StatelessWidget {
+  final Auth? auth;
+  final Function()? onBack;
+
+  const DatadirrAccountAppBar({super.key, this.auth, this.onBack});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Visibility(
+              visible: (onBack != null),
+              child: Tap(
+                  onTap: onBack, child: const Icon(Assets.icArrowBackward))),
+          const HSpace(),
+          Expanded(
+            child: Row(
+              children: [
+                const CImage(Assets.imgDatadirrTxt, width: 70),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, top: 2),
+                  child: Text(Strings.account,
+                      style: Styles.txtMedium(color: Colorr.accent)),
+                )
+              ],
+            ),
+          ),
+          const HSpace(),
+          Visibility(
+              visible: (auth != null),
+              child: ProfileUI(value: (auth ?? Auth()).name))
+        ],
+      ),
+    );
+  }
+}
 
 class VSpace extends StatelessWidget {
   final double? space;
@@ -847,8 +887,65 @@ class CButton extends StatelessWidget {
           text,
           overflow: TextOverflow.ellipsis,
           style: textStyle ??
-              Styles.txtRegular(
+              Styles.txtMedium(
                   color: textColor ?? Colorr.white, fontSize: fontSize),
+        )),
+      ),
+    );
+  }
+}
+
+class CTextButton extends StatelessWidget {
+  final String text;
+  final Function() onTap;
+  final double? width;
+  final double? height;
+  final Color? backColor;
+  final Color? textColor;
+  final double? fontSize;
+  final Color? borderColor;
+  final bool loading;
+  final Color? loaderColor;
+  final double? radius;
+  final TextStyle? textStyle;
+
+  const CTextButton(
+      {super.key,
+      required this.text,
+      required this.onTap,
+      this.width,
+      this.height,
+      this.backColor,
+      this.textColor,
+      this.fontSize,
+      this.borderColor,
+      this.loading = false,
+      this.loaderColor,
+      this.radius,
+      this.textStyle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tap(
+      onTap: () {
+        if (!loading) {
+          onTap();
+        }
+      },
+      child: Container(
+        width: width,
+        height: height ?? 40,
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
+        decoration:
+            Styles.boxDecoration(borderColor: borderColor, radius: radius),
+        child: Center(
+            child: Text(
+          text,
+          overflow: TextOverflow.ellipsis,
+          style: textStyle ??
+              Styles.txtMedium(
+                  color: loading ? Colorr.grey20 : textColor ?? Colorr.primary,
+                  fontSize: fontSize),
         )),
       ),
     );
@@ -1043,5 +1140,36 @@ class CImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(assetName,
         width: width, height: height, package: Plugin.package);
+  }
+}
+
+class InfoUI extends StatelessWidget {
+  final String title;
+  final String message;
+  final IconData icon;
+
+  const InfoUI(
+      {super.key,
+      required this.title,
+      required this.message,
+      required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: Styles.txtMedium()),
+        const VSpace(space: 5),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon),
+            const HSpace(),
+            Expanded(child: Text(message, style: Styles.txtThin())),
+          ],
+        )
+      ],
+    );
   }
 }

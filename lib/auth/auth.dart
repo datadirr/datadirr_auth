@@ -49,7 +49,7 @@ class Auth {
     return Auth(
         token: obj['token'] ?? "",
         deviceId: obj['deviceId'] ?? "",
-        authID: obj['deviceId'] ?? "",
+        authID: obj['authID'] ?? "",
         username: obj['username'] ?? "",
         email: obj['email'] ?? "",
         mobile: obj['mobile'] ?? "",
@@ -92,7 +92,7 @@ class Auth {
     return Auth(
         token: json['token'] ?? "",
         deviceId: json['deviceId'] ?? "",
-        authID: json['deviceId'] ?? "",
+        authID: json['authID'] ?? "",
         username: json['username'] ?? "",
         email: json['email'] ?? "",
         mobile: json['mobile'] ?? "",
@@ -136,7 +136,7 @@ class Auth {
     Auth? auth;
     String? token = await Auth.currentAuthToken();
     if (token == null) {
-      return auth;
+      return null;
     }
     dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
     try {
@@ -153,6 +153,21 @@ class Auth {
 
   static removeAuth() async {
     await DB.db.remove(DB.kCurrentAuth);
+  }
+
+  static Future<Auth?> signAuth() async {
+    Auth? auth;
+    dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          auth = Auth.fromJson(Api.result(res)["auth"]);
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return auth;
   }
 
   static Future<Auth?> signInWithUniqueID(
@@ -325,6 +340,35 @@ class Auth {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
           await Auth.removeAuth();
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
+  }
+
+  static Future<bool> changeName(
+      {required String authID,
+      required String firstName,
+      required String middleName,
+      required String lastName}) async {
+    bool success = false;
+    var body = {
+      "authID": authID,
+      "firstName": firstName,
+      "middleName": middleName,
+      "lastName": lastName
+    };
+    dynamic res =
+        await Api.request(cName: Api.cAuth, fName: Api.fChangeName, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          Common.showSnackBar(Api.message(res));
           success = true;
         } else {
           Common.showSnackBar(Api.message(res));
