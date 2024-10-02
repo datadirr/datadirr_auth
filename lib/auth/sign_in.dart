@@ -271,8 +271,6 @@ class _SignInState extends State<SignIn> {
           widget.onSuccess!(context, auth);
         }
       }
-    } else {
-      Common.showSnackBar(Strings.plzTryAgain);
     }
     if (mounted) {
       setState(() {
