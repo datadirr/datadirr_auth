@@ -77,6 +77,30 @@ class _ManageAccountState extends State<ManageAccount> {
                           overflow: TextOverflow.ellipsis,
                           style: Styles.txtMedium()),
                       const VSpace(space: 30),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(Strings.profilePicture.toUpperCase(),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Styles.txtRegular(
+                                        color: Colorr.grey50,
+                                        fontSize: Fonts.fontXSmall)),
+                                Text(Strings.profilePictureChangesMsg,
+                                    style: Styles.txtRegular()),
+                              ],
+                            ),
+                          ),
+                          ProfileUI(
+                              value: _auth.name,
+                              size: 60,
+                              radius: 30,
+                              fontSize: Fonts.fontXXLarge)
+                        ],
+                      ),
+                      const VSpace(space: 30),
                       _itemRow(
                           onTap: () {
                             _manageName();
@@ -148,10 +172,9 @@ class _ManageAccountState extends State<ManageAccount> {
   }
 
   _manageGender() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ManageGender(auth: _auth))).then(_success);
+    Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ManageGender(auth: _auth)))
+        .then(_success);
   }
 
   _success(dynamic value) {
