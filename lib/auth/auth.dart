@@ -400,4 +400,25 @@ class Auth {
     }
     return success;
   }
+
+  static Future<bool> changeGender(
+      {required String authID, required String genderId}) async {
+    bool success = false;
+    var body = {"authID": authID, "genderId": genderId};
+    dynamic res = await Api.request(
+        cName: Api.cAuth, fName: Api.fChangeGender, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          Common.showSnackBar(Api.message(res));
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
+  }
 }

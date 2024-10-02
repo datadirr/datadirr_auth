@@ -1,5 +1,6 @@
 import 'package:datadirr_auth/auth/auth.dart';
 import 'package:datadirr_auth/auth/manage/manage_birthdate.dart';
+import 'package:datadirr_auth/auth/manage/manage_gender.dart';
 import 'package:datadirr_auth/auth/manage/manage_name.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
@@ -95,7 +96,7 @@ class _ManageAccountState extends State<ManageAccount> {
                       const VSpace(space: 30),
                       _itemRow(
                           onTap: () {
-                            _manageName();
+                            _manageGender();
                           },
                           title: Strings.gender.toUpperCase(),
                           value: _auth.genderName),
@@ -144,6 +145,13 @@ class _ManageAccountState extends State<ManageAccount> {
         context,
         MaterialPageRoute(
             builder: (context) => ManageBirthdate(auth: _auth))).then(_success);
+  }
+
+  _manageGender() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ManageGender(auth: _auth))).then(_success);
   }
 
   _success(dynamic value) {

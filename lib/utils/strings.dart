@@ -95,9 +95,11 @@ class Strings {
   static const String name = "Name";
   static const String contactInfo = "Contact Info";
   static const String basicInfo = "Basic Info";
-  static const String nameChangesMsg = "Changes to your name will be reflected across your datadirr Account.";
-  static const String birthdateChangesMsg = "Your birthday may be used for account security and personalisation across datadirr services.";
+  static const String nameChangesMsg = "Changes to your name will be reflected across your datadirr Account";
+  static const String birthdateChangesMsg = "Your birthday may be used for account security and personalisation across datadirr services";
+  static const String genderChangesMsg = "Your gender may be used for personalisation across datadirr services";
   static const String whoCanSeeYourName = "Who can see your name";
   static const String whoCanSeeYourBirthdate = "Who can see your birth date";
+  static const String whoCanSeeYourGender = "Who can see your gender";
   static const String whoCanSeeYourInfoMsg = "Anyone can see this info when they communicate with you or view content you create in datadirr Account.";
 }
