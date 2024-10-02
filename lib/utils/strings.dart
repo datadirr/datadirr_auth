@@ -47,6 +47,7 @@ class Strings {
       "To help keep your account safe, datadirr wants to make sure that it's really you trying to sign in";
   static const String signIn = "Sign in";
   static const String signOut = "Sign out";
+  static const String signedOut = "Signed out";
   static const String signOutThisDevice = "Sign out from this device";
   static const String signOutAllDevices = "Sign out from all devices";
   static const String signOutAllAccounts = "Sign out of all accounts";

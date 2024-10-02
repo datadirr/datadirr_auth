@@ -143,11 +143,14 @@ class Auth {
     if (token == null) {
       return null;
     }
+    //TODO: check internet connection
     dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {
           auth = Auth.fromJson(Api.result(res)["auth"]);
+        } else {
+          await Auth.removeAuth();
         }
       }
     } catch (_) {

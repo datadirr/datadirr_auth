@@ -16,9 +16,9 @@ import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart
 import 'package:validation_pro/validate.dart';
 
 class ManageMobile extends StatefulWidget {
-  final Auth auth;
+  final Function(BuildContext context)? onSignOut;
 
-  const ManageMobile({super.key, required this.auth});
+  const ManageMobile({super.key, this.onSignOut});
 
   @override
   State<ManageMobile> createState() => _ManageMobileState();
@@ -26,6 +26,7 @@ class ManageMobile extends StatefulWidget {
 
 class _ManageMobileState extends State<ManageMobile> {
   bool _loading = false;
+  Auth? _auth;
   final TextEditingController _conMobile = TextEditingController();
   Country? _country;
 
@@ -36,14 +37,26 @@ class _ManageMobileState extends State<ManageMobile> {
   }
 
   _init() async {
-    _country = !Utils.isNullOREmpty(widget.auth.countryIdForMobile)
-        ? Country(
-            countryId: widget.auth.countryIdForMobile,
-            countryPhoneCodePlus: widget.auth.countryPhoneCodePlus)
-        : null;
-    _conMobile.text = widget.auth.mobile;
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _loading = true;
+      });
+    }
+    _auth = await Auth.currentAuth();
+    if (_auth == null && widget.onSignOut != null && mounted) {
+      widget.onSignOut!(context);
+    } else {
+      _country = !Utils.isNullOREmpty(_auth!.countryIdForMobile)
+          ? Country(
+              countryId: _auth!.countryIdForMobile,
+              countryPhoneCodePlus: _auth!.countryPhoneCodePlus)
+          : null;
+      _conMobile.text = _auth!.mobile;
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -55,88 +68,99 @@ class _ManageMobileState extends State<ManageMobile> {
         child: Scaffold(
           backgroundColor: Colorr.white,
           body: SafeArea(
-              child: Column(
-            children: [
-              DatadirrAccountAppBar(
-                  auth: widget.auth,
-                  onBack: () {
-                    if (!_loading) {
-                      _back();
-                    }
-                  }),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(Strings.mobileNumber,
-                            style:
-                                Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-                        const VSpace(),
-                        Text(Strings.mobileChangesMsg,
-                            style: Styles.txtRegular(color: Colorr.grey50)),
-                        const VSpace(space: 20),
-                        Row(
+              child: _loading
+                  ? const CProgress()
+                  : (_auth != null)
+                      ? Column(
                           children: [
-                            FlexWidth(
-                              child: CAText(
-                                  text: (_country != null)
-                                      ? _country!.countryPhoneCodePlus
-                                      : "-",
-                                  onTap: () {
-                                    if (!_loading) {
-                                      _gotoCountrySelection();
-                                    }
-                                  }),
-                            ),
-                            const HSpace(),
-                            Expanded(
-                              child: CATextField(
-                                controller: _conMobile,
-                                hintText: Strings.mobileNumber,
-                                inputType: TextInputType.number,
-                                inputFormatters: [Validate.intValueFormatter()],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const VSpace(space: 30),
-                        const InfoUI(
-                            title: Strings.whoCanSeeYourMobileNumber,
-                            message: Strings.whoCanSeeYourInfoMsg,
-                            icon: Assets.icPeople),
-                        const VSpace(space: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CTextButton(
-                                text: Strings.cancel,
-                                onTap: () {
+                            DatadirrAccountAppBar(
+                                auth: _auth,
+                                onBack: () {
                                   if (!_loading) {
                                     _back();
                                   }
-                                },
-                                loading: _loading),
-                            const HSpace(),
-                            CButton(
-                                text: Strings.save,
-                                onTap: () {
-                                  if (!_loading) {
-                                    _checkValidDetails();
-                                  }
-                                },
-                                loading: _loading)
+                                }),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(Strings.mobileNumber,
+                                          style: Styles.txtRegular(
+                                              fontSize: Fonts.fontXXLarge)),
+                                      const VSpace(),
+                                      Text(Strings.mobileChangesMsg,
+                                          style: Styles.txtRegular(
+                                              color: Colorr.grey50)),
+                                      const VSpace(space: 20),
+                                      Row(
+                                        children: [
+                                          FlexWidth(
+                                            child: CAText(
+                                                text: (_country != null)
+                                                    ? _country!
+                                                        .countryPhoneCodePlus
+                                                    : "-",
+                                                onTap: () {
+                                                  if (!_loading) {
+                                                    _gotoCountrySelection();
+                                                  }
+                                                }),
+                                          ),
+                                          const HSpace(),
+                                          Expanded(
+                                            child: CATextField(
+                                              controller: _conMobile,
+                                              hintText: Strings.mobileNumber,
+                                              inputType: TextInputType.number,
+                                              inputFormatters: [
+                                                Validate.intValueFormatter()
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const VSpace(space: 30),
+                                      const InfoUI(
+                                          title:
+                                              Strings.whoCanSeeYourMobileNumber,
+                                          message: Strings.whoCanSeeYourInfoMsg,
+                                          icon: Assets.icPeople),
+                                      const VSpace(space: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          CTextButton(
+                                              text: Strings.cancel,
+                                              onTap: () {
+                                                if (!_loading) {
+                                                  _back();
+                                                }
+                                              },
+                                              loading: _loading),
+                                          const HSpace(),
+                                          CButton(
+                                              text: Strings.save,
+                                              onTap: () {
+                                                if (!_loading) {
+                                                  _checkValidDetails();
+                                                }
+                                              },
+                                              loading: _loading)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         )
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )),
+                      : const SignedOutUI()),
         ),
       ),
     );
@@ -160,7 +184,7 @@ class _ManageMobileState extends State<ManageMobile> {
 
   _checkValidDetails() {
     String mobile = _conMobile.trimText();
-    if (Utils.isNullOREmpty(widget.auth.authID)) {
+    if (Utils.isNullOREmpty(_auth!.authID)) {
       Common.showSnackBar(Strings.errInvalid);
       return;
     }
@@ -183,7 +207,7 @@ class _ManageMobileState extends State<ManageMobile> {
       });
     }
     bool success = await Auth.changeMobile(
-        authID: widget.auth.authID,
+        authID: _auth!.authID,
         countryIdForMobile: _country!.countryId,
         mobile: mobile);
     if (success) {

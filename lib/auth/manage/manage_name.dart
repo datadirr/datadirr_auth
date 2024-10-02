@@ -12,9 +12,9 @@ import 'package:flutter_widget_function/function/utils.dart';
 import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 
 class ManageName extends StatefulWidget {
-  final Auth auth;
+  final Function(BuildContext context)? onSignOut;
 
-  const ManageName({super.key, required this.auth});
+  const ManageName({super.key, this.onSignOut});
 
   @override
   State<ManageName> createState() => _ManageNameState();
@@ -22,6 +22,7 @@ class ManageName extends StatefulWidget {
 
 class _ManageNameState extends State<ManageName> {
   bool _loading = false;
+  Auth? _auth;
   final TextEditingController _conFirstName = TextEditingController();
   final TextEditingController _conMiddleName = TextEditingController();
   final TextEditingController _conLastName = TextEditingController();
@@ -33,11 +34,23 @@ class _ManageNameState extends State<ManageName> {
   }
 
   _init() async {
-    _conFirstName.text = widget.auth.firstName;
-    _conMiddleName.text = widget.auth.middleName;
-    _conLastName.text = widget.auth.lastName;
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _loading = true;
+      });
+    }
+    _auth = await Auth.currentAuth();
+    if (_auth == null && widget.onSignOut != null && mounted) {
+      widget.onSignOut!(context);
+    } else {
+      _conFirstName.text = _auth!.firstName;
+      _conMiddleName.text = _auth!.middleName;
+      _conLastName.text = _auth!.lastName;
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -49,78 +62,85 @@ class _ManageNameState extends State<ManageName> {
         child: Scaffold(
           backgroundColor: Colorr.white,
           body: SafeArea(
-              child: Column(
-            children: [
-              DatadirrAccountAppBar(
-                  auth: widget.auth,
-                  onBack: () {
-                    if (!_loading) {
-                      _back();
-                    }
-                  }),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(Strings.name,
-                            style:
-                                Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-                        const VSpace(),
-                        Text(Strings.nameChangesMsg,
-                            style: Styles.txtRegular(color: Colorr.grey50)),
-                        const VSpace(space: 20),
-                        CATextField(
-                          controller: _conFirstName,
-                          hintText: Strings.firstName,
-                        ),
-                        const VSpace(),
-                        CATextField(
-                          controller: _conMiddleName,
-                          hintText: Strings.middleNameOptional,
-                        ),
-                        const VSpace(),
-                        CATextField(
-                          controller: _conLastName,
-                          hintText: Strings.lastNameSurname,
-                        ),
-                        const VSpace(space: 30),
-                        const InfoUI(
-                            title: Strings.whoCanSeeYourName,
-                            message: Strings.whoCanSeeYourInfoMsg,
-                            icon: Assets.icPeople),
-                        const VSpace(space: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+              child: _loading
+                  ? const CProgress()
+                  : (_auth != null)
+                      ? Column(
                           children: [
-                            CTextButton(
-                                text: Strings.cancel,
-                                onTap: () {
+                            DatadirrAccountAppBar(
+                                auth: _auth,
+                                onBack: () {
                                   if (!_loading) {
                                     _back();
                                   }
-                                },
-                                loading: _loading),
-                            const HSpace(),
-                            CButton(
-                                text: Strings.save,
-                                onTap: () {
-                                  if (!_loading) {
-                                    _checkValidDetails();
-                                  }
-                                },
-                                loading: _loading)
+                                }),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(Strings.name,
+                                          style: Styles.txtRegular(
+                                              fontSize: Fonts.fontXXLarge)),
+                                      const VSpace(),
+                                      Text(Strings.nameChangesMsg,
+                                          style: Styles.txtRegular(
+                                              color: Colorr.grey50)),
+                                      const VSpace(space: 20),
+                                      CATextField(
+                                        controller: _conFirstName,
+                                        hintText: Strings.firstName,
+                                      ),
+                                      const VSpace(),
+                                      CATextField(
+                                        controller: _conMiddleName,
+                                        hintText: Strings.middleNameOptional,
+                                      ),
+                                      const VSpace(),
+                                      CATextField(
+                                        controller: _conLastName,
+                                        hintText: Strings.lastNameSurname,
+                                      ),
+                                      const VSpace(space: 30),
+                                      const InfoUI(
+                                          title: Strings.whoCanSeeYourName,
+                                          message: Strings.whoCanSeeYourInfoMsg,
+                                          icon: Assets.icPeople),
+                                      const VSpace(space: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          CTextButton(
+                                              text: Strings.cancel,
+                                              onTap: () {
+                                                if (!_loading) {
+                                                  _back();
+                                                }
+                                              },
+                                              loading: _loading),
+                                          const HSpace(),
+                                          CButton(
+                                              text: Strings.save,
+                                              onTap: () {
+                                                if (!_loading) {
+                                                  _checkValidDetails();
+                                                }
+                                              },
+                                              loading: _loading)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         )
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )),
+                      : const SignedOutUI()),
         ),
       ),
     );
@@ -131,7 +151,7 @@ class _ManageNameState extends State<ManageName> {
     String middleName = _conMiddleName.trimText();
     String lastName = _conLastName.trimText();
 
-    if (Utils.isNullOREmpty(widget.auth.authID)) {
+    if (Utils.isNullOREmpty(_auth!.authID)) {
       Common.showSnackBar(Strings.errInvalid);
       return;
     }
@@ -150,7 +170,7 @@ class _ManageNameState extends State<ManageName> {
       });
     }
     bool success = await Auth.changeName(
-        authID: widget.auth.authID,
+        authID: _auth!.authID,
         firstName: firstName,
         middleName: middleName,
         lastName: lastName);

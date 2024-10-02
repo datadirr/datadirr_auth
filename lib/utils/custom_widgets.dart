@@ -1173,3 +1173,12 @@ class InfoUI extends StatelessWidget {
     );
   }
 }
+
+class SignedOutUI extends StatelessWidget {
+  const SignedOutUI({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text(Strings.signedOut, style: Styles.txtMedium()));
+  }
+}

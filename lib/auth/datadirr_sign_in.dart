@@ -24,6 +24,7 @@ class DatadirrSignIn extends StatefulWidget {
 
 class _DatadirrSignInState extends State<DatadirrSignIn> {
   bool _loading = false;
+  Auth? _auth;
   List<Auth> _auths = [];
 
   @override
@@ -33,6 +34,18 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
   }
 
   _init() async {
+    _auth = widget.auth;
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
+    _auth = await Auth.currentAuth();
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
     await _getAuths();
   }
 
@@ -64,22 +77,22 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
                     padding: const EdgeInsets.all(20),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       const VSpace(space: 20),
-                      (widget.auth != null)
+                      (_auth != null)
                           ? Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 ProfileUI(
-                                    value: widget.auth!.name,
+                                    value: _auth!.name,
                                     size: 80,
                                     radius: 50,
                                     fontSize: Fonts.fontXXXLarge),
                                 const VSpace(),
-                                Text(widget.auth!.name,
+                                Text(_auth!.name,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                     style: Styles.txtMedium(
                                         fontSize: Fonts.fontXXLarge)),
-                                Text(widget.auth!.email,
+                                Text(_auth!.email,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                     style: Styles.txtRegular()),
@@ -317,12 +330,11 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
   }
 
   _gotoManageAccount() {
-    if (widget.auth != null) {
+    if (_auth != null) {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => ManageAccount(
-                    auth: widget.auth!,
                     onSignOut: widget.onSignOut,
                   )));
     }

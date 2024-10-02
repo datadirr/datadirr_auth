@@ -17,10 +17,9 @@ import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 import 'package:flutter_widget_function/widget/responsive/responsive_layout.dart';
 
 class ManageAccount extends StatefulWidget {
-  final Auth auth;
   final Function(BuildContext context)? onSignOut;
 
-  const ManageAccount({super.key, required this.auth, this.onSignOut});
+  const ManageAccount({super.key, this.onSignOut});
 
   @override
   State<ManageAccount> createState() => _ManageAccountState();
@@ -28,7 +27,7 @@ class ManageAccount extends StatefulWidget {
 
 class _ManageAccountState extends State<ManageAccount> {
   bool _loading = false;
-  Auth _auth = Auth();
+  Auth? _auth;
 
   @override
   void initState() {
@@ -37,13 +36,15 @@ class _ManageAccountState extends State<ManageAccount> {
   }
 
   _init() async {
-    _auth = widget.auth;
     if (mounted) {
       setState(() {
         _loading = true;
       });
     }
-    _auth = (await Auth.currentAuth()) ?? Auth();
+    _auth = await Auth.currentAuth();
+    if (_auth == null && widget.onSignOut != null && mounted) {
+      widget.onSignOut!(context);
+    }
     if (mounted) {
       setState(() {
         _loading = false;
@@ -59,125 +60,137 @@ class _ManageAccountState extends State<ManageAccount> {
         child: Scaffold(
           backgroundColor: Colorr.white,
           body: SafeArea(
-              child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const VSpace(space: 30),
-                ProfileUI(
-                    value: _auth.name,
-                    size: 80,
-                    radius: 50,
-                    fontSize: Fonts.fontXXXLarge),
-                const VSpace(),
-                Text(_auth.name,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: Styles.txtMedium(fontSize: Fonts.fontXXLarge)),
-                Text(_auth.email,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: Styles.txtRegular()),
-                FlexWidth(
-                  child: CTextButton(
-                      text: Strings.signOut,
-                      onTap: () {
-                        _signOut();
-                      }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const CDivider(),
-                      const VSpace(space: 30),
-                      _title(
-                          title: Strings.basicInfo,
-                          icon: Assets.icPersonalInfo),
-                      const VSpace(),
-                      _subTitle(message: Strings.basicInfoMsg),
-                      const VSpace(space: 30),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _itemRow(
-                                title: Strings.profilePicture.toUpperCase(),
-                                value: Strings.profilePictureChangesMsg),
+              child: _loading
+                  ? const CProgress()
+                  : (_auth != null)
+                      ? SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              const VSpace(space: 30),
+                              ProfileUI(
+                                  value: _auth!.name,
+                                  size: 80,
+                                  radius: 50,
+                                  fontSize: Fonts.fontXXXLarge),
+                              const VSpace(),
+                              Text(_auth!.name,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Styles.txtMedium(
+                                      fontSize: Fonts.fontXXLarge)),
+                              Text(_auth!.email,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Styles.txtRegular()),
+                              FlexWidth(
+                                child: CTextButton(
+                                    text: Strings.signOut,
+                                    onTap: () {
+                                      _signOut();
+                                    }),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    const CDivider(),
+                                    const VSpace(space: 30),
+                                    _title(
+                                        title: Strings.basicInfo,
+                                        icon: Assets.icPersonalInfo),
+                                    const VSpace(),
+                                    _subTitle(message: Strings.basicInfoMsg),
+                                    const VSpace(space: 30),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: _itemRow(
+                                              title: Strings.profilePicture
+                                                  .toUpperCase(),
+                                              value: Strings
+                                                  .profilePictureChangesMsg),
+                                        ),
+                                        ProfileUI(
+                                            value: _auth!.name,
+                                            size: 50,
+                                            radius: 30,
+                                            fontSize: Fonts.fontXXLarge)
+                                      ],
+                                    ),
+                                    const VSpace(space: 30),
+                                    _itemRow(
+                                        onTap: () {
+                                          _manageName();
+                                        },
+                                        title: Strings.name.toUpperCase(),
+                                        value: _auth!.fullName),
+                                    const VSpace(space: 30),
+                                    _itemRow(
+                                        onTap: () {
+                                          _manageBirthdate();
+                                        },
+                                        title: Strings.birthdate.toUpperCase(),
+                                        value: DateTimes.formatDateTime(
+                                            dateTime: _auth!.birthdate,
+                                            inFormat: Format.fyyyyMMdd,
+                                            outFormat: Format.fddMMMyyyy)),
+                                    const VSpace(space: 30),
+                                    _itemRow(
+                                        onTap: () {
+                                          _manageGender();
+                                        },
+                                        title: Strings.gender.toUpperCase(),
+                                        value: _auth!.genderName),
+                                    const VSpace(space: 30),
+                                    _itemRow(
+                                        title: Strings.region.toUpperCase(),
+                                        value: _auth!.countryName),
+                                    const VSpace(space: 30),
+                                    const CDivider(),
+                                    const VSpace(space: 30),
+                                    _title(
+                                        title: Strings.contactInfo,
+                                        icon: Assets.icMobile),
+                                    const VSpace(),
+                                    _subTitle(message: Strings.contactInfoMsg),
+                                    const VSpace(space: 30),
+                                    _itemRow(
+                                        title: Strings.email.toUpperCase(),
+                                        value: _auth!.email),
+                                    const VSpace(space: 30),
+                                    _itemRow(
+                                        onTap: () {
+                                          _manageMobile();
+                                        },
+                                        title: Strings.phone.toUpperCase(),
+                                        value:
+                                            "${_auth!.countryPhoneCodePlus}${_auth!.mobile}"),
+                                    const VSpace(space: 30),
+                                    const CDivider(),
+                                    const VSpace(space: 30),
+                                    _title(
+                                        title: Strings.security,
+                                        icon: Assets.icLock),
+                                    const VSpace(),
+                                    _subTitle(message: Strings.securityInfoMsg),
+                                    const VSpace(space: 30),
+                                    _itemRow(
+                                        onTap: () {
+                                          _managePassword();
+                                        },
+                                        title: Strings.password.toUpperCase(),
+                                        value: "*****"),
+                                    const VSpace(space: 30),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          ProfileUI(
-                              value: _auth.name,
-                              size: 50,
-                              radius: 30,
-                              fontSize: Fonts.fontXXLarge)
-                        ],
-                      ),
-                      const VSpace(space: 30),
-                      _itemRow(
-                          onTap: () {
-                            _manageName();
-                          },
-                          title: Strings.name.toUpperCase(),
-                          value: _auth.fullName),
-                      const VSpace(space: 30),
-                      _itemRow(
-                          onTap: () {
-                            _manageBirthdate();
-                          },
-                          title: Strings.birthdate.toUpperCase(),
-                          value: DateTimes.formatDateTime(
-                              dateTime: _auth.birthdate,
-                              inFormat: Format.fyyyyMMdd,
-                              outFormat: Format.fddMMMyyyy)),
-                      const VSpace(space: 30),
-                      _itemRow(
-                          onTap: () {
-                            _manageGender();
-                          },
-                          title: Strings.gender.toUpperCase(),
-                          value: _auth.genderName),
-                      const VSpace(space: 30),
-                      _itemRow(
-                          title: Strings.region.toUpperCase(),
-                          value: _auth.countryName),
-                      const VSpace(space: 30),
-                      const CDivider(),
-                      const VSpace(space: 30),
-                      _title(title: Strings.contactInfo, icon: Assets.icMobile),
-                      const VSpace(),
-                      _subTitle(message: Strings.contactInfoMsg),
-                      const VSpace(space: 30),
-                      _itemRow(
-                          title: Strings.email.toUpperCase(),
-                          value: _auth.email),
-                      const VSpace(space: 30),
-                      _itemRow(
-                          onTap: () {
-                            _manageMobile();
-                          },
-                          title: Strings.phone.toUpperCase(),
-                          value:
-                              "${_auth.countryPhoneCodePlus}${_auth.mobile}"),
-                      const VSpace(space: 30),
-                      const CDivider(),
-                      const VSpace(space: 30),
-                      _title(title: Strings.security, icon: Assets.icLock),
-                      const VSpace(),
-                      _subTitle(message: Strings.securityInfoMsg),
-                      const VSpace(space: 30),
-                      _itemRow(
-                          onTap: () {
-                            _managePassword();
-                          },
-                          title: Strings.password.toUpperCase(),
-                          value: "*****"),
-                      const VSpace(space: 30),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )),
+                        )
+                      : const SignedOutUI()),
         ),
       ),
     );
@@ -227,35 +240,53 @@ class _ManageAccountState extends State<ManageAccount> {
   }
 
   _manageName() {
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ManageName(auth: _auth)))
-        .then(_success);
+    if (_auth != null && !_loading) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ManageName(onSignOut: widget.onSignOut))).then(_success);
+    }
   }
 
   _manageBirthdate() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ManageBirthdate(auth: _auth))).then(_success);
+    if (_auth != null && !_loading) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ManageBirthdate(onSignOut: widget.onSignOut))).then(_success);
+    }
   }
 
   _manageGender() {
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ManageGender(auth: _auth)))
-        .then(_success);
+    if (_auth != null && !_loading) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ManageGender(onSignOut: widget.onSignOut))).then(_success);
+    }
   }
 
   _manageMobile() {
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ManageMobile(auth: _auth)))
-        .then(_success);
+    if (_auth != null && !_loading) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ManageMobile(onSignOut: widget.onSignOut))).then(_success);
+    }
   }
 
   _managePassword() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ManagePassword(auth: _auth))).then(_success);
+    if (_auth != null && !_loading) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ManagePassword(onSignOut: widget.onSignOut))).then(_success);
+    }
   }
 
   _success(dynamic value) {
@@ -267,16 +298,20 @@ class _ManageAccountState extends State<ManageAccount> {
 
   _signOut() async {
     Common.showSignOutDialog(context, onThisDevice: () {
-      _signOutThisDevice();
+      if (!_loading) {
+        _signOutThisDevice();
+      }
     }, onAllDevices: () {
-      _signOutAllDevices();
+      if (!_loading) {
+        _signOutAllDevices();
+      }
     });
   }
 
   _signOutThisDevice() async {
     bool success = await Auth.signOut();
     if (success) {
-      if (widget.onSignOut != null) {
+      if (widget.onSignOut != null && mounted) {
         widget.onSignOut!(context);
       }
     }
@@ -285,7 +320,7 @@ class _ManageAccountState extends State<ManageAccount> {
   _signOutAllDevices() async {
     bool success = await Auth.signOutAll();
     if (success) {
-      if (widget.onSignOut != null) {
+      if (widget.onSignOut != null && mounted) {
         widget.onSignOut!(context);
       }
     }

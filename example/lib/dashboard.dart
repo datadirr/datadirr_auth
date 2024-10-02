@@ -20,8 +20,8 @@ class _DashboardState extends State<Dashboard> {
       body: SafeArea(
           child: ElevatedButton(
               onPressed: () {
-                //_manageSignIn();
-                _directManageSignIn();
+                _manageSignIn();
+                //_directManageSignIn();
               },
               child: Text(widget.auth.firstName))),
     );
@@ -51,7 +51,6 @@ class _DashboardState extends State<Dashboard> {
           context,
           MaterialPageRoute(
               builder: (context) => ManageAccount(
-                  auth: widget.auth,
                   onSignOut: (context) => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => const Splash()),

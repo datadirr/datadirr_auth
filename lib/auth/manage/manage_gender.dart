@@ -13,9 +13,9 @@ import 'package:flutter_widget_function/function/utils.dart';
 import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 
 class ManageGender extends StatefulWidget {
-  final Auth auth;
+  final Function(BuildContext context)? onSignOut;
 
-  const ManageGender({super.key, required this.auth});
+  const ManageGender({super.key, this.onSignOut});
 
   @override
   State<ManageGender> createState() => _ManageGenderState();
@@ -23,6 +23,7 @@ class ManageGender extends StatefulWidget {
 
 class _ManageGenderState extends State<ManageGender> {
   bool _loading = false;
+  Auth? _auth;
   List<DropdownItem> _genderList = [];
   String _genderId = "";
 
@@ -33,10 +34,22 @@ class _ManageGenderState extends State<ManageGender> {
   }
 
   _init() async {
-    _genderId = widget.auth.genderId;
-    _getGender();
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _loading = true;
+      });
+    }
+    _auth = await Auth.currentAuth();
+    if (_auth == null && widget.onSignOut != null && mounted) {
+      widget.onSignOut!(context);
+    } else {
+      _genderId = _auth!.genderId;
+      _getGender();
+    }
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -48,74 +61,81 @@ class _ManageGenderState extends State<ManageGender> {
         child: Scaffold(
           backgroundColor: Colorr.white,
           body: SafeArea(
-              child: Column(
-            children: [
-              DatadirrAccountAppBar(
-                  auth: widget.auth,
-                  onBack: () {
-                    if (!_loading) {
-                      _back();
-                    }
-                  }),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(Strings.gender,
-                            style:
-                                Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
-                        const VSpace(),
-                        Text(Strings.genderChangesMsg,
-                            style: Styles.txtRegular(color: Colorr.grey50)),
-                        const VSpace(space: 20),
-                        CADropdown(
-                            hintText: Strings.gender,
-                            selectedId: _genderId,
-                            list: _genderList,
-                            onSelected: (id) {
-                              _genderId = id;
-                              if (mounted) {
-                                setState(() {});
-                              }
-                            }),
-                        const VSpace(space: 30),
-                        const InfoUI(
-                            title: Strings.whoCanSeeYourGender,
-                            message: Strings.whoCanSeeYourInfoMsg,
-                            icon: Assets.icPeople),
-                        const VSpace(space: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+              child: _loading
+                  ? const CProgress()
+                  : (_auth != null)
+                      ? Column(
                           children: [
-                            CTextButton(
-                                text: Strings.cancel,
-                                onTap: () {
+                            DatadirrAccountAppBar(
+                                auth: _auth,
+                                onBack: () {
                                   if (!_loading) {
                                     _back();
                                   }
-                                },
-                                loading: _loading),
-                            const HSpace(),
-                            CButton(
-                                text: Strings.save,
-                                onTap: () {
-                                  if (!_loading) {
-                                    _checkValidDetails();
-                                  }
-                                },
-                                loading: _loading)
+                                }),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(Strings.gender,
+                                          style: Styles.txtRegular(
+                                              fontSize: Fonts.fontXXLarge)),
+                                      const VSpace(),
+                                      Text(Strings.genderChangesMsg,
+                                          style: Styles.txtRegular(
+                                              color: Colorr.grey50)),
+                                      const VSpace(space: 20),
+                                      CADropdown(
+                                          hintText: Strings.gender,
+                                          selectedId: _genderId,
+                                          list: _genderList,
+                                          onSelected: (id) {
+                                            _genderId = id;
+                                            if (mounted) {
+                                              setState(() {});
+                                            }
+                                          }),
+                                      const VSpace(space: 30),
+                                      const InfoUI(
+                                          title: Strings.whoCanSeeYourGender,
+                                          message: Strings.whoCanSeeYourInfoMsg,
+                                          icon: Assets.icPeople),
+                                      const VSpace(space: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          CTextButton(
+                                              text: Strings.cancel,
+                                              onTap: () {
+                                                if (!_loading) {
+                                                  _back();
+                                                }
+                                              },
+                                              loading: _loading),
+                                          const HSpace(),
+                                          CButton(
+                                              text: Strings.save,
+                                              onTap: () {
+                                                if (!_loading) {
+                                                  _checkValidDetails();
+                                                }
+                                              },
+                                              loading: _loading)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         )
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )),
+                      : const SignedOutUI()),
         ),
       ),
     );
@@ -129,7 +149,7 @@ class _ManageGenderState extends State<ManageGender> {
   }
 
   _checkValidDetails() {
-    if (Utils.isNullOREmpty(widget.auth.authID)) {
+    if (Utils.isNullOREmpty(_auth!.authID)) {
       Common.showSnackBar(Strings.errInvalid);
       return;
     }
@@ -147,8 +167,8 @@ class _ManageGenderState extends State<ManageGender> {
         _loading = true;
       });
     }
-    bool success = await Auth.changeGender(
-        authID: widget.auth.authID, genderId: _genderId);
+    bool success =
+        await Auth.changeGender(authID: _auth!.authID, genderId: _genderId);
     if (success) {
       if (mounted) {
         Navigator.pop(context, true);
