@@ -6,25 +6,23 @@ import 'package:datadirr_auth/utils/custom_widgets.dart';
 import 'package:datadirr_auth/utils/fonts.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
+import 'package:date_time_plus/date_times.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_function/function/extension.dart';
 import 'package:flutter_widget_function/function/utils.dart';
 import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 
-class ManageName extends StatefulWidget {
+class ManageBirthdate extends StatefulWidget {
   final Auth auth;
 
-  const ManageName({super.key, required this.auth});
+  const ManageBirthdate({super.key, required this.auth});
 
   @override
-  State<ManageName> createState() => _ManageNameState();
+  State<ManageBirthdate> createState() => _ManageBirthdateState();
 }
 
-class _ManageNameState extends State<ManageName> {
+class _ManageBirthdateState extends State<ManageBirthdate> {
   bool _loading = false;
-  final TextEditingController _conFirstName = TextEditingController();
-  final TextEditingController _conMiddleName = TextEditingController();
-  final TextEditingController _conLastName = TextEditingController();
+  String _birthdate = "";
 
   @override
   void initState() {
@@ -33,9 +31,7 @@ class _ManageNameState extends State<ManageName> {
   }
 
   _init() async {
-    _conFirstName.text = widget.auth.firstName;
-    _conMiddleName.text = widget.auth.middleName;
-    _conLastName.text = widget.auth.lastName;
+    _birthdate = widget.auth.birthdate;
     if (mounted) {
       setState(() {});
     }
@@ -65,30 +61,34 @@ class _ManageNameState extends State<ManageName> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(Strings.name,
+                        Text(Strings.birthdate,
                             style:
                                 Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
                         const VSpace(),
-                        Text(Strings.nameChangesMsg,
+                        Text(Strings.birthdateChangesMsg,
                             style: Styles.txtRegular()),
                         const VSpace(space: 20),
-                        CATextField(
-                          controller: _conFirstName,
-                          hintText: Strings.firstName,
-                        ),
-                        const VSpace(),
-                        CATextField(
-                          controller: _conMiddleName,
-                          hintText: Strings.middleNameOptional,
-                        ),
-                        const VSpace(),
-                        CATextField(
-                          controller: _conLastName,
-                          hintText: Strings.lastNameSurname,
-                        ),
+                        CAText(
+                            onTap: () {
+                              DateTimes.datePicker(
+                                  context: context,
+                                  date: _birthdate,
+                                  onSelected: (date) {
+                                    _birthdate = date;
+                                    if (mounted) {
+                                      setState(() {});
+                                    }
+                                  },
+                                  maxDate: DateTimes.getCurrentDate());
+                            },
+                            text: DateTimes.formatDateTime(
+                                dateTime: _birthdate,
+                                inFormat: Format.fyyyyMMdd,
+                                outFormat: Format.fddMMMyyyy),
+                            hintText: Strings.birthdate),
                         const VSpace(space: 30),
                         const InfoUI(
-                            title: Strings.whoCanSeeYourName,
+                            title: Strings.whoCanSeeYourBirthdate,
                             message: Strings.whoCanSeeYourInfoMsg,
                             icon: Assets.icPeople),
                         const VSpace(space: 30),
@@ -127,33 +127,26 @@ class _ManageNameState extends State<ManageName> {
   }
 
   _checkValidDetails() {
-    String firstName = _conFirstName.trimText();
-    String middleName = _conMiddleName.trimText();
-    String lastName = _conLastName.trimText();
-
     if (Utils.isNullOREmpty(widget.auth.authID)) {
       Common.showSnackBar(Strings.errInvalid);
       return;
     }
-    if (Utils.isNullOREmpty(firstName) || Utils.isNullOREmpty(lastName)) {
-      Common.showSnackBar(Strings.plzEnterYourName);
+    if (Utils.isNullOREmpty(_birthdate)) {
+      Common.showSnackBar(Strings.plzSelectYourBirthdate);
       return;
     }
 
-    _changeName(firstName, middleName, lastName);
+    _changeBirthdate();
   }
 
-  _changeName(String firstName, String middleName, String lastName) async {
+  _changeBirthdate() async {
     if (mounted) {
       setState(() {
         _loading = true;
       });
     }
-    bool success = await Auth.changeName(
-        authID: widget.auth.authID,
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName);
+    bool success = await Auth.changeBirthdate(
+        authID: widget.auth.authID, birthdate: _birthdate);
     if (success) {
       if (mounted) {
         Navigator.pop(context, true);

@@ -379,4 +379,25 @@ class Auth {
     }
     return success;
   }
+
+  static Future<bool> changeBirthdate(
+      {required String authID, required String birthdate}) async {
+    bool success = false;
+    var body = {"authID": authID, "birthdate": birthdate};
+    dynamic res = await Api.request(
+        cName: Api.cAuth, fName: Api.fChangeBirthdate, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          Common.showSnackBar(Api.message(res));
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
+  }
 }

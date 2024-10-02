@@ -185,7 +185,7 @@ class _SignUpState extends State<SignUp> {
                     text: DateTimes.formatDateTime(
                         dateTime: _birthdate,
                         inFormat: Format.fyyyyMMdd,
-                        outFormat: Format.fddMMyyyy),
+                        outFormat: Format.fddMMMyyyy),
                     hintText: Strings.birthdate),
               ),
               const HSpace(),

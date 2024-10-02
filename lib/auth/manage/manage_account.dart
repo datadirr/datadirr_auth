@@ -1,4 +1,5 @@
 import 'package:datadirr_auth/auth/auth.dart';
+import 'package:datadirr_auth/auth/manage/manage_birthdate.dart';
 import 'package:datadirr_auth/auth/manage/manage_name.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
@@ -6,6 +7,7 @@ import 'package:datadirr_auth/utils/custom_widgets.dart';
 import 'package:datadirr_auth/utils/fonts.dart';
 import 'package:datadirr_auth/utils/strings.dart';
 import 'package:datadirr_auth/utils/styles.dart';
+import 'package:date_time_plus/date_times.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_function/widget/keyboard/keyboard_dismiss.dart';
 
@@ -73,13 +75,30 @@ class _ManageAccountState extends State<ManageAccount> {
                       Text(Strings.basicInfo,
                           overflow: TextOverflow.ellipsis,
                           style: Styles.txtMedium()),
-                      const VSpace(space: 15),
+                      const VSpace(space: 30),
                       _itemRow(
                           onTap: () {
                             _manageName();
                           },
                           title: Strings.name.toUpperCase(),
                           value: _auth.fullName),
+                      const VSpace(space: 30),
+                      _itemRow(
+                          onTap: () {
+                            _manageBirthdate();
+                          },
+                          title: Strings.birthdate.toUpperCase(),
+                          value: DateTimes.formatDateTime(
+                              dateTime: _auth.birthdate,
+                              inFormat: Format.fyyyyMMdd,
+                              outFormat: Format.fddMMMyyyy)),
+                      const VSpace(space: 30),
+                      _itemRow(
+                          onTap: () {
+                            _manageName();
+                          },
+                          title: Strings.gender.toUpperCase(),
+                          value: _auth.genderName),
                     ],
                   ),
                 ),
@@ -117,11 +136,20 @@ class _ManageAccountState extends State<ManageAccount> {
   _manageName() {
     Navigator.push(context,
             MaterialPageRoute(builder: (context) => ManageName(auth: _auth)))
-        .then((value) {
-          bool success = value ?? false;
-          if (success) {
-            _init();
-          }
-    });
+        .then(_success);
+  }
+
+  _manageBirthdate() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ManageBirthdate(auth: _auth))).then(_success);
+  }
+
+  _success(dynamic value) {
+    bool success = value ?? false;
+    if (success) {
+      _init();
+    }
   }
 }
