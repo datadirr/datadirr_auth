@@ -62,54 +62,58 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
                     padding: const EdgeInsets.all(20),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       const VSpace(space: 20),
-                      (widget.auth != null) ? Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ProfileUI(
-                              value: widget.auth!.name,
-                              size: 80,
-                              radius: 50,
-                              fontSize: Fonts.fontXXXLarge),
-                          const VSpace(),
-                          Text(widget.auth!.name,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: Styles.txtMedium(
-                                  fontSize: Fonts.fontXXLarge)),
-                          Text(widget.auth!.email,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: Styles.txtRegular()),
-                          const VSpace(),
-                          FlexWidth(
-                            child: Tap(
-                              onTap: () {
-                                _gotoManageAccount();
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                decoration: Styles.boxDecoration(
-                                    borderColor: Colorr.grey50, radius: 30),
-                                child: Center(
-                                  child: Text(Strings.manageDatadirrAccount,
-                                      style: Styles.txtMedium(
-                                          color: Colorr.primaryBlue)),
-                                ),
-                              ),
+                      (widget.auth != null)
+                          ? Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ProfileUI(
+                                    value: widget.auth!.name,
+                                    size: 80,
+                                    radius: 50,
+                                    fontSize: Fonts.fontXXXLarge),
+                                const VSpace(),
+                                Text(widget.auth!.name,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Styles.txtMedium(
+                                        fontSize: Fonts.fontXXLarge)),
+                                Text(widget.auth!.email,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Styles.txtRegular()),
+                                const VSpace(),
+                                FlexWidth(
+                                  child: Tap(
+                                    onTap: () {
+                                      _gotoManageAccount();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
+                                      decoration: Styles.boxDecoration(
+                                          borderColor: Colorr.grey50,
+                                          radius: 30),
+                                      child: Center(
+                                        child: Text(
+                                            Strings.manageDatadirrAccount,
+                                            style: Styles.txtMedium(
+                                                color: Colorr.primaryBlue)),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          : Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const CImage(Assets.imgDatadirrTxt, width: 100),
+                                const VSpace(),
+                                Text(Strings.signInWithYourDatadirrAccount,
+                                    textAlign: TextAlign.center,
+                                    style: Styles.txtRegular()),
+                              ],
                             ),
-                          )
-                        ],
-                      ) : Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const CImage(Assets.imgDatadirrTxt, width: 100),
-                          const VSpace(),
-                          Text(Strings.signInWithYourDatadirrAccount,
-                              textAlign: TextAlign.center,
-                              style: Styles.txtRegular()),
-                        ],
-                      ),
                       const VSpace(space: 30),
                       Flexible(
                         child: Container(

@@ -28,4 +28,7 @@ class Assets {
   static const IconData icSignOut = Icons.logout_rounded;
   static const IconData icSystemUpdate = Icons.system_update_alt_rounded;
   static const IconData icPeople = Icons.people_alt_outlined;
+  static const IconData icMobile = Icons.phone_iphone_rounded;
+  static const IconData icLock = Icons.lock_outline_rounded;
+  static const IconData icPersonalInfo = Icons.badge_outlined;
 }

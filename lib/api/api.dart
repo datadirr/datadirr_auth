@@ -42,6 +42,8 @@ class Api {
   static const String fChangeName = 'changeName';
   static const String fChangeBirthdate = 'changeBirthdate';
   static const String fChangeGender = 'changeGender';
+  static const String fChangeMobile = 'changeMobile';
+  static const String fChangePassword = 'changePassword';
 
   //body params
   static const String bUniqueID = 'uniqueID';

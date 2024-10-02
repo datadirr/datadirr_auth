@@ -22,6 +22,7 @@ class Auth {
   String genderName;
   String countryId;
   String countryName;
+  String countryIdForMobile;
   String countryPhoneCodePlus;
   String profileImage;
 
@@ -42,6 +43,7 @@ class Auth {
       this.genderName = "",
       this.countryId = "",
       this.countryName = "",
+      this.countryIdForMobile = "",
       this.countryPhoneCodePlus = "",
       this.profileImage = ""});
 
@@ -63,6 +65,7 @@ class Auth {
         genderName: obj['genderName'] ?? "",
         countryId: obj['countryId'] ?? "",
         countryName: obj['countryName'] ?? "",
+        countryIdForMobile: obj['countryIdForMobile'] ?? "",
         countryPhoneCodePlus: obj['countryPhoneCodePlus'] ?? "",
         profileImage: obj['profileImage'] ?? "");
   }
@@ -84,6 +87,7 @@ class Auth {
         "genderName": auth.genderName,
         "countryId": auth.countryId,
         "countryName": auth.countryName,
+        "countryIdForMobile": auth.countryIdForMobile,
         "countryPhoneCodePlus": auth.countryPhoneCodePlus,
         "profileImage": auth.profileImage
       };
@@ -106,6 +110,7 @@ class Auth {
         genderName: json['genderName'] ?? "",
         countryId: json['countryId'] ?? "",
         countryName: json['countryName'] ?? "",
+        countryIdForMobile: json['countryIdForMobile'] ?? "",
         countryPhoneCodePlus: json['countryPhoneCodePlus'] ?? "",
         profileImage: json['profileImage'] ?? "");
   }
@@ -223,7 +228,7 @@ class Auth {
       required String birthdate,
       required String genderId,
       required String countryId,
-      required String countryPhoneCodePlus,
+      required String countryIdForMobile,
       required String mobile,
       required String email,
       required String password}) async {
@@ -235,7 +240,7 @@ class Auth {
       "birthdate": birthdate,
       "genderId": genderId,
       "countryId": countryId,
-      "countryPhoneCodePlus": countryPhoneCodePlus,
+      "countryIdForMobile": countryIdForMobile,
       "mobile": mobile,
       "email": Convert.stringToBase64(email),
       "password": Convert.stringToBase64(password)
@@ -407,6 +412,60 @@ class Auth {
     var body = {"authID": authID, "genderId": genderId};
     dynamic res = await Api.request(
         cName: Api.cAuth, fName: Api.fChangeGender, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          Common.showSnackBar(Api.message(res));
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
+  }
+
+  static Future<bool> changeMobile(
+      {required String authID,
+      required String countryIdForMobile,
+      required String mobile}) async {
+    bool success = false;
+    var body = {
+      "authID": authID,
+      "countryIdForMobile": countryIdForMobile,
+      "mobile": mobile
+    };
+    dynamic res = await Api.request(
+        cName: Api.cAuth, fName: Api.fChangeMobile, body: body);
+    try {
+      if (Api.resNotNull(res)) {
+        if (Api.resultOk(res)) {
+          Common.showSnackBar(Api.message(res));
+          success = true;
+        } else {
+          Common.showSnackBar(Api.message(res));
+        }
+      }
+    } catch (_) {
+      Common.showSnackBar(Strings.errDataParse);
+    }
+    return success;
+  }
+
+  static Future<bool> changePassword(
+      {required String authID,
+      required String oldPassword,
+      required String password}) async {
+    bool success = false;
+    var body = {
+      "authID": authID,
+      "oldPassword": Convert.stringToBase64(oldPassword),
+      "password": Convert.stringToBase64(password)
+    };
+    dynamic res = await Api.request(
+        cName: Api.cAuth, fName: Api.fChangePassword, body: body);
     try {
       if (Api.resNotNull(res)) {
         if (Api.resultOk(res)) {

@@ -1,7 +1,9 @@
 import 'package:datadirr_auth/auth/auth.dart';
 import 'package:datadirr_auth/auth/manage/manage_birthdate.dart';
 import 'package:datadirr_auth/auth/manage/manage_gender.dart';
+import 'package:datadirr_auth/auth/manage/manage_mobile.dart';
 import 'package:datadirr_auth/auth/manage/manage_name.dart';
+import 'package:datadirr_auth/auth/manage/manage_password.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
 import 'package:datadirr_auth/utils/custom_widgets.dart';
@@ -33,9 +35,16 @@ class _ManageAccountState extends State<ManageAccount> {
 
   _init() async {
     _auth = widget.auth;
+    if (mounted) {
+      setState(() {
+        _loading = true;
+      });
+    }
     _auth = (await Auth.currentAuth()) ?? Auth();
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -72,30 +81,23 @@ class _ManageAccountState extends State<ManageAccount> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const CDivider(),
+                      const VSpace(space: 30),
+                      _title(
+                          title: Strings.basicInfo,
+                          icon: Assets.icPersonalInfo),
                       const VSpace(),
-                      Text(Strings.basicInfo,
-                          overflow: TextOverflow.ellipsis,
-                          style: Styles.txtMedium()),
+                      _subTitle(message: Strings.basicInfoMsg),
                       const VSpace(space: 30),
                       Row(
                         children: [
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(Strings.profilePicture.toUpperCase(),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Styles.txtRegular(
-                                        color: Colorr.grey50,
-                                        fontSize: Fonts.fontXSmall)),
-                                Text(Strings.profilePictureChangesMsg,
-                                    style: Styles.txtRegular()),
-                              ],
-                            ),
+                            child: _itemRow(
+                                title: Strings.profilePicture.toUpperCase(),
+                                value: Strings.profilePictureChangesMsg),
                           ),
                           ProfileUI(
                               value: _auth.name,
-                              size: 60,
+                              size: 50,
                               radius: 30,
                               fontSize: Fonts.fontXXLarge)
                         ],
@@ -124,6 +126,42 @@ class _ManageAccountState extends State<ManageAccount> {
                           },
                           title: Strings.gender.toUpperCase(),
                           value: _auth.genderName),
+                      const VSpace(space: 30),
+                      _itemRow(
+                          title: Strings.region.toUpperCase(),
+                          value: _auth.countryName),
+                      const VSpace(space: 30),
+                      const CDivider(),
+                      const VSpace(space: 30),
+                      _title(title: Strings.contactInfo, icon: Assets.icMobile),
+                      const VSpace(),
+                      _subTitle(message: Strings.contactInfoMsg),
+                      const VSpace(space: 30),
+                      _itemRow(
+                          title: Strings.email.toUpperCase(),
+                          value: _auth.email),
+                      const VSpace(space: 30),
+                      _itemRow(
+                          onTap: () {
+                            _manageMobile();
+                          },
+                          title: Strings.phone.toUpperCase(),
+                          value:
+                              "${_auth.countryPhoneCodePlus}${_auth.mobile}"),
+                      const VSpace(space: 30),
+                      const CDivider(),
+                      const VSpace(space: 30),
+                      _title(title: Strings.security, icon: Assets.icLock),
+                      const VSpace(),
+                      _subTitle(message: Strings.securityInfoMsg),
+                      const VSpace(space: 30),
+                      _itemRow(
+                          onTap: () {
+                            _managePassword();
+                          },
+                          title: Strings.password.toUpperCase(),
+                          value: "*****"),
+                      const VSpace(space: 30),
                     ],
                   ),
                 ),
@@ -133,6 +171,23 @@ class _ManageAccountState extends State<ManageAccount> {
         ),
       ),
     );
+  }
+
+  _title({required String title, required IconData icon}) {
+    return Row(
+      children: [
+        Icon(icon, size: 20),
+        const HSpace(),
+        Flexible(
+          child: Text(title,
+              overflow: TextOverflow.ellipsis, style: Styles.txtMedium()),
+        ),
+      ],
+    );
+  }
+
+  _subTitle({required String message}) {
+    return Text(message, style: Styles.txtRegular(color: Colorr.grey50));
   }
 
   _itemRow({required String title, required String value, Function()? onTap}) {
@@ -152,7 +207,10 @@ class _ManageAccountState extends State<ManageAccount> {
               ],
             ),
           ),
-          const Icon(Assets.icArrowForward, size: 20)
+          const HSpace(),
+          Visibility(
+              visible: (onTap != null),
+              child: const Icon(Assets.icArrowForward, size: 15))
         ],
       ),
     );
@@ -175,6 +233,19 @@ class _ManageAccountState extends State<ManageAccount> {
     Navigator.push(context,
             MaterialPageRoute(builder: (context) => ManageGender(auth: _auth)))
         .then(_success);
+  }
+
+  _manageMobile() {
+    Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ManageMobile(auth: _auth)))
+        .then(_success);
+  }
+
+  _managePassword() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ManagePassword(auth: _auth))).then(_success);
   }
 
   _success(dynamic value) {

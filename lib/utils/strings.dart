@@ -32,8 +32,8 @@ class Strings {
   static String otpSentToEmail(String email) => "OTP sent to $email";
   static const String checkingInfo = "Checking Info";
   static const String createAccount = "Create account";
-  static const String manageDatadirrAccount = "Manage your datadirr account";
-  static const String createDatadirrAccount = "Create a datadirr account";
+  static const String manageDatadirrAccount = "Manage your datadirr Account";
+  static const String createDatadirrAccount = "Create a datadirr Account";
   static const String createStrongPassword = "Create a strong password";
   static const String enterYourPersonalDetailsAndContactInformation =
       "Enter your personal details and contact information";
@@ -48,16 +48,17 @@ class Strings {
   static const String signIn = "Sign in";
   static const String signOut = "Sign out";
   static const String signOutAllAccounts = "Sign out of all accounts";
-  static const String withYourDatadirrAccount = "with your datadirr account";
+  static const String withYourDatadirrAccount = "with your datadirr Account";
   static const String signInWithYourDatadirrAccount =
       "Sign in with your datadirr accounts";
   static const String youWillUseEmailSignInAccount =
-      "You'll use this email to sign in to your datadirr account";
+      "You'll use this email to sign in to your datadirr Account";
   static const String createStrongPasswordMsg =
       "Create a strong password with a mixture of letters, numbers and symbols";
   static const String searchInDatadirr = "Search in datadirr";
   static const String mobileNumber = "Mobile number";
   static const String email = "Email";
+  static const String phone = "Phone";
   static const String firstName = "First name";
   static const String middleName = "Middle name";
   static const String middleNameOptional = "Middle name (optional)";
@@ -66,7 +67,9 @@ class Strings {
   static const String searchHere = "Search here...";
   static const String searchEmail = "Search email";
   static const String emailAlreadyRegistered = "Email already registered";
+  static const String password = "Password";
   static const String enterPassword = "Enter password";
+  static const String enterOldPassword = "Enter old password";
   static const String confirmPassword = "Confirm Password";
   static const String forgotPassword = "Forgot password?";
   static const String plzEnterEmail = "Please enter email";
@@ -77,6 +80,7 @@ class Strings {
       "Please enter valid mobile number";
   static const String passwordValidMsg =
       "Password must have\n  - Min 6 and Max 12 characters\n  - At least one uppercase character\n  - At least one lowercase character\n  - At least one number\n  - At least one special character [@#\u0024!%?]";
+  static const String plzEnterOldPassword = "Please enter old password";
   static const String plzEnterPassword = "Please enter password";
   static const String plzEnterValidPassword = "Please enter valid password";
   static const String plzEnterConfirmPassword = "Please enter confirm password";
@@ -92,17 +96,35 @@ class Strings {
   static const String plzSelectYourGender = "Please select your gender";
   static const String birthdate = "Birth Date";
   static const String plzSelectYourBirthdate = "Please select your birth date";
+  static const String region = "Region";
+  static const String security = "Security";
   static const String profilePicture = "Profile Picture";
   static const String name = "Name";
   static const String contactInfo = "Contact Info";
   static const String basicInfo = "Basic Info";
-  static const String basicInfoMsg = "Some info may be visible to other people using datadirr services.";
-  static const String profilePictureChangesMsg = "Profile picture to personalisation your datadirr Account. (Can't change)";
-  static const String nameChangesMsg = "Changes to your name will be reflected across your datadirr Account.";
-  static const String birthdateChangesMsg = "Your birthday may be used for account security and personalisation across datadirr services.";
-  static const String genderChangesMsg = "Your gender may be used for personalisation across datadirr services.";
+  static const String basicInfoMsg =
+      "Some info may be visible to other people using datadirr services.";
+  static const String contactInfoMsg =
+      "Manage contact associated with your datadirr Account.";
+  static const String securityInfoMsg =
+      "A secure password helps protect your datadirr Account.";
+  static const String profilePictureChangesMsg =
+      "Profile picture to personalisation your datadirr Account (Can't change)";
+  static const String nameChangesMsg =
+      "Changes to your name will be reflected across your datadirr Account";
+  static const String birthdateChangesMsg =
+      "Your birthday may be used for account security and personalisation across datadirr services";
+  static const String genderChangesMsg =
+      "Your gender may be used for personalisation across datadirr services";
+  static const String mobileChangesMsg =
+      "Your mobile number can be used to deliver important notifications, help you sign in, and more";
+  static const String passwordChangesMsg =
+      "Choose a strong password and don't reuse it for other accounts";
   static const String whoCanSeeYourName = "Who can see your name";
   static const String whoCanSeeYourBirthdate = "Who can see your birth date";
   static const String whoCanSeeYourGender = "Who can see your gender";
-  static const String whoCanSeeYourInfoMsg = "Anyone can see this info when they communicate with you or view content you create in datadirr Account.";
+  static const String whoCanSeeYourMobileNumber =
+      "Who can see your mobile number";
+  static const String whoCanSeeYourInfoMsg =
+      "Anyone can see this info when they communicate with you or view content you create in datadirr Account.";
 }

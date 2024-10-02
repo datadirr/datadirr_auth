@@ -30,7 +30,7 @@ class _DashboardState extends State<Dashboard> {
           context,
           MaterialPageRoute(
               builder: (context) => DatadirrSignIn(
-                auth: widget.auth,
+                  auth: widget.auth,
                   onSuccess: (context, auth) => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(

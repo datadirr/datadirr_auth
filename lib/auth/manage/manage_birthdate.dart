@@ -66,7 +66,7 @@ class _ManageBirthdateState extends State<ManageBirthdate> {
                                 Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
                         const VSpace(),
                         Text(Strings.birthdateChangesMsg,
-                            style: Styles.txtRegular()),
+                            style: Styles.txtRegular(color: Colorr.grey50)),
                         const VSpace(space: 20),
                         CAText(
                             onTap: () {

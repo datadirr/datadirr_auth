@@ -70,7 +70,7 @@ class _ManageNameState extends State<ManageName> {
                                 Styles.txtRegular(fontSize: Fonts.fontXXLarge)),
                         const VSpace(),
                         Text(Strings.nameChangesMsg,
-                            style: Styles.txtRegular()),
+                            style: Styles.txtRegular(color: Colorr.grey50)),
                         const VSpace(space: 20),
                         CATextField(
                           controller: _conFirstName,
