@@ -6,6 +6,7 @@ import 'package:datadirr_auth/auth/manage/manage_name.dart';
 import 'package:datadirr_auth/auth/manage/manage_password.dart';
 import 'package:datadirr_auth/utils/assets.dart';
 import 'package:datadirr_auth/utils/colorr.dart';
+import 'package:datadirr_auth/utils/common.dart';
 import 'package:datadirr_auth/utils/custom_widgets.dart';
 import 'package:datadirr_auth/utils/fonts.dart';
 import 'package:datadirr_auth/utils/strings.dart';
@@ -74,6 +75,9 @@ class _ManageAccountState extends State<ManageAccount> {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: Styles.txtRegular()),
+                CTextButton(text: Strings.signOut, onTap: () {
+                  _signOut();
+                }),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -253,5 +257,13 @@ class _ManageAccountState extends State<ManageAccount> {
     if (success) {
       _init();
     }
+  }
+
+  _signOut() async {
+    Common.showConfirmDialog(context, (confirm) {
+      if (confirm) {
+
+      }
+    }, title: Strings.signOut);
   }
 }

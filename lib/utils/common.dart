@@ -41,6 +41,18 @@ class Common {
     }
   }
 
+  static Future<String> getDeviceName() async {
+    if (Platform.isAndroid) {
+      return ((await DeviceInfoPlugin().androidInfo).model);
+    } else if (Platform.isIOS) {
+      return ((await DeviceInfoPlugin().iosInfo).utsname.sysname) ?? "";
+    } else if (Platform.isWindows) {
+      return ((await DeviceInfoPlugin().windowsInfo).computerName);
+    } else {
+      return "";
+    }
+  }
+
   static Future<String> getPackageName() async {
     return (await PackageInfo.fromPlatform()).packageName;
   }

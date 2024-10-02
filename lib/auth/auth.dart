@@ -265,9 +265,11 @@ class Auth {
   static Future<Auth?> signIn(
       {required String uniqueID, required String password}) async {
     Auth? auth;
+    String deviceName = await Common.getDeviceName();
     var body = {
       "uniqueID": Convert.stringToBase64(uniqueID),
-      "password": Convert.stringToBase64(password)
+      "password": Convert.stringToBase64(password),
+      "deviceName": deviceName
     };
     dynamic res =
         await Api.request(cName: Api.cAuth, fName: Api.fSignIn, body: body);
