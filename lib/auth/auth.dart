@@ -119,12 +119,12 @@ class Auth {
     return (list ?? []).map<Auth>((json) => Auth.fromJson(json)).toList();
   }
 
-  static Future<String?> currentAuthToken() async {
+  static Future<Auth?> getAuth() async {
     String? value = await DB.db.getString(DB.kCurrentAuth);
     if (value != null) {
       var obj = jsonDecode(value);
       Auth auth = Auth.fromMap(obj);
-      return auth.token;
+      return auth;
     } else {
       return null;
     }
@@ -139,11 +139,14 @@ class Auth {
 
   static Future<Auth?> currentAuth() async {
     Auth? auth;
-    String? token = await Auth.currentAuthToken();
-    if (token == null) {
+    Auth? currentAuth = await Auth.getAuth();
+    if (currentAuth == null) {
       return null;
     }
-    //TODO: check internet connection
+    bool isNetwork = await Common.isNetworkConnected();
+    if (!isNetwork) {
+      return currentAuth;
+    }
     dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
     try {
       if (Api.resNotNull(res)) {

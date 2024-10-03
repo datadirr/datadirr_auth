@@ -61,7 +61,7 @@ class Api {
       return null;
     }
 
-    String token = (await Auth.currentAuthToken()) ?? "";
+    String token = (await Auth.getAuth() ?? Auth()).token;
     if (isMultipartRequest) {
       /*String baseUrl = "${App.serverUrl}${Constants.apiPath}$call/${App.sessions.payCode}/${App.sessions.databaseName}";
         Map<String, String> headers = {
