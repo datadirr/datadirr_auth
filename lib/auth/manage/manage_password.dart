@@ -23,6 +23,7 @@ class ManagePassword extends StatefulWidget {
 
 class _ManagePasswordState extends State<ManagePassword> {
   bool _loading = false;
+  bool _loadingSubmit = false;
   Auth? _auth;
   final TextEditingController _conOldPassword = TextEditingController();
   final TextEditingController _conPassword = TextEditingController();
@@ -55,7 +56,7 @@ class _ManagePasswordState extends State<ManagePassword> {
   @override
   Widget build(BuildContext context) {
     return Touch(
-      disable: _loading,
+      disable: (_loading || _loadingSubmit),
       child: KeyboardDismiss(
         child: Scaffold(
           backgroundColor: Colorr.white,
@@ -68,7 +69,7 @@ class _ManagePasswordState extends State<ManagePassword> {
                             DatadirrAccountAppBar(
                                 auth: _auth,
                                 onBack: () {
-                                  if (!_loading) {
+                                  if (!_loading && !_loadingSubmit) {
                                     _back();
                                   }
                                 }),
@@ -157,20 +158,20 @@ class _ManagePasswordState extends State<ManagePassword> {
                                           CTextButton(
                                               text: Strings.cancel,
                                               onTap: () {
-                                                if (!_loading) {
+                                                if (!_loading && !_loadingSubmit) {
                                                   _back();
                                                 }
                                               },
-                                              loading: _loading),
+                                              loading: _loadingSubmit),
                                           const HSpace(),
                                           CButton(
                                               text: Strings.save,
                                               onTap: () {
-                                                if (!_loading) {
+                                                if (!_loading && !_loadingSubmit) {
                                                   _checkValidDetails();
                                                 }
                                               },
-                                              loading: _loading)
+                                              loading: _loadingSubmit)
                                         ],
                                       )
                                     ],
@@ -222,7 +223,7 @@ class _ManagePasswordState extends State<ManagePassword> {
   _changePassword(String oldPassword, String password) async {
     if (mounted) {
       setState(() {
-        _loading = true;
+        _loadingSubmit = true;
       });
     }
     bool success = await Auth.changePassword(
@@ -234,7 +235,7 @@ class _ManagePasswordState extends State<ManagePassword> {
     }
     if (mounted) {
       setState(() {
-        _loading = false;
+        _loadingSubmit = false;
       });
     }
   }

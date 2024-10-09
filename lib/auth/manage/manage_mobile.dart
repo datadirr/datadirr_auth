@@ -26,6 +26,7 @@ class ManageMobile extends StatefulWidget {
 
 class _ManageMobileState extends State<ManageMobile> {
   bool _loading = false;
+  bool _loadingSubmit = false;
   Auth? _auth;
   final TextEditingController _conMobile = TextEditingController();
   Country? _country;
@@ -63,7 +64,7 @@ class _ManageMobileState extends State<ManageMobile> {
   @override
   Widget build(BuildContext context) {
     return Touch(
-      disable: _loading,
+      disable: (_loading || _loadingSubmit),
       child: KeyboardDismiss(
         child: Scaffold(
           backgroundColor: Colorr.white,
@@ -76,7 +77,7 @@ class _ManageMobileState extends State<ManageMobile> {
                             DatadirrAccountAppBar(
                                 auth: _auth,
                                 onBack: () {
-                                  if (!_loading) {
+                                  if (!_loading && !_loadingSubmit) {
                                     _back();
                                   }
                                 }),
@@ -105,7 +106,8 @@ class _ManageMobileState extends State<ManageMobile> {
                                                         .countryPhoneCodePlus
                                                     : "-",
                                                 onTap: () {
-                                                  if (!_loading) {
+                                                  if (!_loading &&
+                                                      !_loadingSubmit) {
                                                     _gotoCountrySelection();
                                                   }
                                                 }),
@@ -137,20 +139,22 @@ class _ManageMobileState extends State<ManageMobile> {
                                           CTextButton(
                                               text: Strings.cancel,
                                               onTap: () {
-                                                if (!_loading) {
+                                                if (!_loading &&
+                                                    !_loadingSubmit) {
                                                   _back();
                                                 }
                                               },
-                                              loading: _loading),
+                                              loading: _loadingSubmit),
                                           const HSpace(),
                                           CButton(
                                               text: Strings.save,
                                               onTap: () {
-                                                if (!_loading) {
+                                                if (!_loading &&
+                                                    !_loadingSubmit) {
                                                   _checkValidDetails();
                                                 }
                                               },
-                                              loading: _loading)
+                                              loading: _loadingSubmit)
                                         ],
                                       )
                                     ],
@@ -203,7 +207,7 @@ class _ManageMobileState extends State<ManageMobile> {
   _changeMobile(String mobile) async {
     if (mounted) {
       setState(() {
-        _loading = true;
+        _loadingSubmit = true;
       });
     }
     bool success = await Auth.changeMobile(
@@ -217,7 +221,7 @@ class _ManageMobileState extends State<ManageMobile> {
     }
     if (mounted) {
       setState(() {
-        _loading = false;
+        _loadingSubmit = false;
       });
     }
   }

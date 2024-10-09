@@ -22,6 +22,7 @@ class ManageBirthdate extends StatefulWidget {
 
 class _ManageBirthdateState extends State<ManageBirthdate> {
   bool _loading = false;
+  bool _loadingSubmit = false;
   Auth? _auth;
   String _birthdate = "";
 
@@ -53,7 +54,7 @@ class _ManageBirthdateState extends State<ManageBirthdate> {
   @override
   Widget build(BuildContext context) {
     return Touch(
-      disable: _loading,
+      disable: (_loading || _loadingSubmit),
       child: KeyboardDismiss(
         child: Scaffold(
           backgroundColor: Colorr.white,
@@ -66,7 +67,7 @@ class _ManageBirthdateState extends State<ManageBirthdate> {
                             DatadirrAccountAppBar(
                                 auth: _auth,
                                 onBack: () {
-                                  if (!_loading) {
+                                  if (!_loading && !_loadingSubmit) {
                                     _back();
                                   }
                                 }),
@@ -118,20 +119,22 @@ class _ManageBirthdateState extends State<ManageBirthdate> {
                                           CTextButton(
                                               text: Strings.cancel,
                                               onTap: () {
-                                                if (!_loading) {
+                                                if (!_loading &&
+                                                    !_loadingSubmit) {
                                                   _back();
                                                 }
                                               },
-                                              loading: _loading),
+                                              loading: _loadingSubmit),
                                           const HSpace(),
                                           CButton(
                                               text: Strings.save,
                                               onTap: () {
-                                                if (!_loading) {
+                                                if (!_loading &&
+                                                    !_loadingSubmit) {
                                                   _checkValidDetails();
                                                 }
                                               },
-                                              loading: _loading)
+                                              loading: _loadingSubmit)
                                         ],
                                       )
                                     ],
@@ -163,7 +166,7 @@ class _ManageBirthdateState extends State<ManageBirthdate> {
   _changeBirthdate() async {
     if (mounted) {
       setState(() {
-        _loading = true;
+        _loadingSubmit = true;
       });
     }
     bool success = await Auth.changeBirthdate(
@@ -175,7 +178,7 @@ class _ManageBirthdateState extends State<ManageBirthdate> {
     }
     if (mounted) {
       setState(() {
-        _loading = false;
+        _loadingSubmit = false;
       });
     }
   }

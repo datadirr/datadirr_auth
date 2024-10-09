@@ -138,14 +138,13 @@ class Auth {
   }
 
   static Future<Auth?> currentAuth() async {
-    Auth? auth;
-    Auth? currentAuth = await Auth.getAuth();
-    if (currentAuth == null) {
+    Auth? auth = await Auth.getAuth();
+    if (auth == null) {
       return null;
     }
     bool isNetwork = await Common.isNetworkConnected();
     if (!isNetwork) {
-      return currentAuth;
+      return auth;
     }
     dynamic res = await Api.request(cName: Api.cAuth, fName: Api.fSignAuth);
     try {

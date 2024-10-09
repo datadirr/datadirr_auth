@@ -56,7 +56,7 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
       child: Scaffold(
         backgroundColor: Colorr.white,
         body: SafeArea(
-            child: (_loading || _auths.isEmpty)
+            child: ((_loading || _auths.isEmpty) && _auth == null)
                 ? Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -273,7 +273,7 @@ class _DatadirrSignInState extends State<DatadirrSignIn> {
       });
     }
     _auths = await Auth.authLinkedByDevice();
-    if (_auths.isEmpty) {
+    if (_auths.isEmpty && _auth == null) {
       _gotoSignIn();
     }
     if (mounted) {
